@@ -35,7 +35,7 @@ def fetch_all_unit() -> list[str] | Exception:
 
 
 def insert_unit(unit: str) -> None | Exception:
-    """Insert unit into unit table
+    """Insert unit row into unit table
     :parameter unit:
     :return: Nothing or an error
     :rtype: None | Exception
@@ -51,7 +51,7 @@ def insert_unit(unit: str) -> None | Exception:
 
 def update_unit(unit: str) -> None | Exception:
     """
-    Update unit field using his unit field to filter from unit table
+    Update unit row using his unit field to filter from unit table
     :parameter unit:
     :return: Nothing or an error
     :rtype: None | Exception
@@ -66,7 +66,7 @@ def update_unit(unit: str) -> None | Exception:
 
 def delete_unit(unit: str) -> None | Exception:
     """
-    Delete unit field using his unit field to filter from unit table
+    Delete unit row using his unit field to filter from unit table
     :parameter unit:
     :return: Nothing or an error
     :rtype: None | Exception
