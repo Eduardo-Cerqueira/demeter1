@@ -44,4 +44,3 @@ CREATE ROLE app
 
 GRANT demeter_dev
     TO app;
-
