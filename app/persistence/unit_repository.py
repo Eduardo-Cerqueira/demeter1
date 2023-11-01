@@ -62,15 +62,16 @@ def insert_unit(unit: str) -> None | Exception:
         conn.commit()
 
 
-def update_unit(unit: str) -> None | Exception:
+def update_unit(unit_value: str, unit: str) -> None | Exception:
     """
     Update unit field using his unit field to filter from table unit.
+    :parameter unit_value:
     :parameter unit:
     :return: Nothing or an error
     :rtype: None | Exception
     """
     try:
-        db.execute("UPDATE unit SET unit = %s WHERE unit = %s", [unit])
+        db.execute("UPDATE unit SET unit = %s WHERE unit = %s", [unit_value, unit])
     except Exception as error:
         return error
     finally:
