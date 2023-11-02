@@ -1,5 +1,5 @@
 from uuid import UUID
-from datetime import datetime
+from datetime import date
 from typing import Any
 
 import psycopg2
@@ -55,8 +55,8 @@ def fetch_culture_by_id(culture_id: UUID) -> tuple[Any, ...] | None | Exception:
 def insert_culture(
     plot_number: int,
     production_code: int,
-    start_date: datetime,
-    end_date: datetime,
+    start_date: date,
+    end_date: date,
     quantity: int,
 ) -> None | Exception:
     """Insert culture into table culture.
@@ -83,8 +83,8 @@ def update_culture(
     culture_id: UUID,
     plot_number: int,
     production_code: int,
-    start_date: datetime,
-    end_date: datetime,
+    start_date: date,
+    end_date: date,
     quantity: int,
 ) -> None | Exception:
     """
@@ -114,8 +114,8 @@ def partial_update_culture(
     culture_id: UUID,
     plot_number: int,
     production_code: int,
-    start_date: datetime,
-    end_date: datetime,
+    start_date: date,
+    end_date: date,
     quantity: int,
 ) -> None | Exception:
     """Partially update culture row using his id field to filter from table culture.

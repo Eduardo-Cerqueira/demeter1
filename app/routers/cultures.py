@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from typing import Optional
 from uuid import UUID
 
@@ -26,8 +26,8 @@ class Culture(BaseModel):
     id: UUID
     plot_number: int
     production_code: int
-    start_date: datetime
-    end_date: datetime
+    start_date: date
+    end_date: date
     quantity: int
 
 
@@ -36,8 +36,8 @@ class CreateUpdateCulture(BaseModel):
 
     plot_number: int
     production_code: int
-    start_date: datetime
-    end_date: datetime
+    start_date: date
+    end_date: date
     quantity: int
 
 
@@ -46,8 +46,8 @@ class CultureOptional(BaseModel):
 
     plot_number: Optional[int] = None
     production_code: Optional[int] = None
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
     quantity: Optional[int] = None
 
 
@@ -59,8 +59,8 @@ def read_cultures():
     - **id**: unique identifier
     - **plot_number**: plot_number associated with the culture
     - **production_code**: production_code associated with the culture
-    - **start_date**: each start_date have a datetime
-    - **end_date**: each end_date have a datetime
+    - **start_date**: each start_date have a date
+    - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
     return {"data": fetch_all_culture()}
@@ -73,8 +73,8 @@ def create_culture(culture: Culture):
 
     - **plot_number**: plot_number associated with the culture
     - **production_code**: production_code associated with the culture
-    - **start_date**: each start_date have a datetime
-    - **end_date**: each end_date have a datetime
+    - **start_date**: each start_date have a date
+    - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
     if not culture.id:
@@ -109,8 +109,8 @@ def read_culture(culture_id: UUID):
     - **id**: unique identifier
     - **plot_number**: plot_number associated with the culture
     - **production_code**: production_code associated with the culture
-    - **start_date**: each start_date have a datetime
-    - **end_date**: each end_date have a datetime
+    - **start_date**: each start_date have a date
+    - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
 
     :parameter culture_id:
