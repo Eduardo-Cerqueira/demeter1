@@ -51,3 +51,29 @@ def read_productions():
     """
     return {"data": fetch_all_production()}
 
+
+@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one production")
+def create_production(production: Production):
+    """
+    Create a production with all the information:
+
+    - **code**: each code have a designation
+    - **unit**: each unit have a designation
+    - **name**: each name have a designation
+    """
+    if not production.code:
+        raise HTTPException(
+            status_code=400,
+            detail="Production is empty",
+            headers={"X-Error": "Resource empty"},
+        )
+    db_production = fetch_production_by_code(code=production.code)
+    if db_production is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="Production already exists",
+            headers={"X-Error": "Resource already exists"},
+        )
+    return insert_production(
+        code=production.code, unit=production.unit, name=production.name
+    )
