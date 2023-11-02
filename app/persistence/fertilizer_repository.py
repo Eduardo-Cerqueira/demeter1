@@ -47,7 +47,13 @@ def get_fertilizer_by_id(identifier):
         :return: A tuple with the fertilizer's data.
     """
     db.execute("SELECT * FROM fertilizer WHERE id = %s", (identifier,))
-    return db.fetchone()
+    fertilizer = db.fetchone()
+    new_fertilizer = {
+        "id": fertilizer[0],
+        "unit": fertilizer[1],
+        "name": fertilizer[2],
+    }
+    return new_fertilizer
 
 
 def create_fertilizer(unit, name):
