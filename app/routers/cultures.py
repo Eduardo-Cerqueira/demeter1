@@ -152,3 +152,33 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
         end_date=culture.end_date,
         quantity=culture.quantity,
     )
+
+
+@router.patch(
+    "/{culture_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update partially a culture",
+)
+def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
+    """
+    Update one culture partially using his id value
+
+    :parameter culture_id:
+    :parameter culture:
+    """
+    db_culture = fetch_culture_by_id(culture_id=culture_id)
+    stored_model = CultureOptional(**culture.model_dump())
+    if not db_culture:
+        raise HTTPException(
+            status_code=404,
+            detail="Culture not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return partial_update_culture(
+        culture_id=culture_id,
+        plot_number=stored_model.plot_number,
+        production_code=stored_model.production_code,
+        start_date=stored_model.start_date,
+        end_date=stored_model.end_date,
+        quantity=stored_model.quantity,
+    )
