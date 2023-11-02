@@ -59,7 +59,7 @@ def test_put_production():
     code '500' to '400', unit 'L' to 'KG', name 'E 200L' to 'E 200KG'"""
     response = client.put(
         "/productions/500",
-        json={"code": 400,"unit": "L", "name": "E 200L"},
+        json={"code": 400, "unit": "L", "name": "E 200L"},
     )
     assert response.status_code == 204
 

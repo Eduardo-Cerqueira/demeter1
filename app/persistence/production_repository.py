@@ -26,7 +26,7 @@ db = conn.cursor()
 def fetch_all_production() -> list[tuple[Any, ...]] | Exception:
     """Returns a list of string representing all productions inside the table production.
     If this nothing is found, it will return a single empty array.
-    :return: A list of tuples containing string unit
+    :return: A list of tuples containing multiples production objects
     :rtype: list[tuple[str]] | Exception
     """
     try:
@@ -39,7 +39,7 @@ def fetch_all_production() -> list[tuple[Any, ...]] | Exception:
 def fetch_production_by_code(code: int) -> tuple[Any, ...] | None | Exception:
     """Returns a list of string representing a production filtered by the code field inside the table production.
     If this nothing is found, it will return a single empty array.
-    :return: A list of tuples containing string unit
+    :return: A list of tuples containing a production object
     :rtype: list[tuple[str]] | Exception
     """
     try:
@@ -68,7 +68,9 @@ def insert_production(code: int, unit: str, name: str) -> None | Exception:
         conn.commit()
 
 
-def update_production(code: int, new_code: int, new_unit: str, new_name: str) -> None | Exception:
+def update_production(
+    code: int, new_code: int, new_unit: str, new_name: str
+) -> None | Exception:
     """
     Update production row using his code field to filter from table production.
     :parameter code:
