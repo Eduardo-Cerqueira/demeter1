@@ -55,7 +55,6 @@ def insert_unit(unit: str) -> None | Exception:
     """
     try:
         db.execute("INSERT INTO unit(unit) VALUES(%s)", [unit])
-        print(type(db.lastrowid))
     except Exception as error:
         return error
     finally:
