@@ -34,7 +34,7 @@ def test_fetch_one_unit():
     response = client.get("/units/foo")
     assert response.status_code == 200
     data = response.json()
-    assert data["data"] == "foo"
+    assert data["data"] == ["foo"]
 
 
 def test_fetch_nonexistent_unit():
@@ -58,7 +58,7 @@ def test_put_unit():
     assert response.status_code == 200
 
     data = response.json()
-    assert data["data"] == "foobar"
+    assert data["data"] == ["foobar"]
 
 
 def test_patch_unit():
@@ -85,7 +85,7 @@ def test_empty_patch_unit():
     assert response.status_code == 200
 
     data = response.json()
-    assert data["data"] == "foo"
+    assert data["data"] == ["foo"]
 
 
 def test_delete_unit():

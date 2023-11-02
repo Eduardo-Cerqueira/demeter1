@@ -53,13 +53,14 @@ def create_unit(unit: Unit):
             detail="Unit is empty",
             headers={"X-Error": "Resource empty"},
         )
-    db_unit = insert_unit(unit=unit.unit)
+    db_unit = fetch_unit_by_unit(unit=unit.unit)
     if db_unit is not None:
         raise HTTPException(
             status_code=409,
             detail="Unit already exists",
             headers={"X-Error": "Resource already exists"},
         )
+    return insert_unit(unit=unit.unit)
 
 
 @router.get("/{unit}", status_code=status.HTTP_200_OK, summary="Fetch one unit")
@@ -78,7 +79,7 @@ def read_unit(unit: str):
             detail="Unit not found",
             headers={"X-Error": "Resource not found"},
         )
-    return {"data": unit}
+    return {"data": db_unit}
 
 
 @router.put(
