@@ -28,7 +28,15 @@ def get_fertilizers():
         :return: A list of all fertilizers.
     """
     db.execute("SELECT * FROM fertilizer")
-    return db.fetchall()
+    fertilizers = db.fetchall()
+    new_fertilizers = []
+    for f in fertilizers:
+        new_fertilizers.append({
+            "id": f[0],
+            "unit": f[1],
+            "name": f[2],
+        })
+    return new_fertilizers
 
 
 def get_fertilizer_by_id(identifier):
@@ -73,7 +81,3 @@ def delete_fertilizer(identifier):
     """
     db.execute("DELETE FROM fertilizer WHERE id = %s", (identifier,))
     conn.commit()
-
-
-db.close()
-conn.close()
