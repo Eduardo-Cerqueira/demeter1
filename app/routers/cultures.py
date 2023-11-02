@@ -97,3 +97,29 @@ def create_culture(culture: Culture):
         end_date=culture.end_date,
         quantity=culture.quantity,
     )
+
+
+@router.get(
+    "/{culture_id}", status_code=status.HTTP_200_OK, summary="Fetch one culture"
+)
+def read_culture(culture_id: UUID):
+    """
+    Fetch one culture with all the information:
+
+    - **id**: unique identifier
+    - **plot_number**: plot_number associated with the culture
+    - **production_code**: production_code associated with the culture
+    - **start_date**: each start_date have a datetime
+    - **end_date**: each end_date have a datetime
+    - **quantity**: each quantity have integer value
+
+    :parameter culture_id:
+    """
+    db_culture = fetch_culture_by_id(culture_id=culture_id)
+    if not db_culture:
+        raise HTTPException(
+            status_code=404,
+            detail="Culture not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return {"data": db_culture}
