@@ -5,6 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
+
 def connect_db():
     """
     Connect to the database.
@@ -38,11 +39,13 @@ def create_plot(number, surface, name, location):
     """
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO plot (number, surface, name, location) "
-                "VALUES (%s, %s, %s, %s)",
-                (number, surface, name, location))
+    cur.execute(
+        "INSERT INTO plot (number, surface, name, location) VALUES (%s, %s, %s, %s)",
+        (number, surface, name, location),
+    )
     conn.commit()
     conn.close()
+
 
 def get_plots():
     """
@@ -54,22 +57,40 @@ def get_plots():
     cur = conn.cursor()
     cur.execute("SELECT * FROM plot")
     plots = cur.fetchall()
+    plots_dict = []
+    for plot in plots:
+        plots_dict.append(
+            {
+                "number": plot[0],
+                "surface": plot[1],
+                "name": plot[2],
+                "location": plot[3],
+            }
+        )
     conn.close()
-    return plots
+    return plots_dict
+
 
 def get_plot_by_number(number):
     """
     Get a plot by its number.
 
     :param (int) number: The plot number.
-    :return: A tuple with the plot's data.
+    :return: A dict with the plot's data.
     """
     conn = connect_db()
     cur = conn.cursor()
     cur.execute("SELECT * FROM plot WHERE number = %s", (number,))
     plot = cur.fetchone()
+    plot_dict = {
+        "number": plot[0],
+        "surface": plot[1],
+        "name": plot[2],
+        "location": plot[3],
+    }
     conn.close()
-    return plot
+    return plot_dict
+
 
 def update_plot(number, new_surface, new_name, new_location):
     """
@@ -82,12 +103,15 @@ def update_plot(number, new_surface, new_name, new_location):
     """
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("UPDATE plot "
-                "SET surface = %s, name = %s, location = %s "
-                "WHERE number = %s",
-                (new_surface, new_name, new_location, number))
+    cur.execute(
+        "UPDATE plot "
+        "SET surface = %s, name = %s, location = %s "
+        "WHERE number = %s",
+        (new_surface, new_name, new_location, number),
+    )
     conn.commit()
     conn.close()
+
 
 def delete_plot(number):
     """
