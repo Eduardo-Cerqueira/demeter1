@@ -71,7 +71,7 @@ def test_put_production():
 
 
 def test_patch_production():
-    """Makes a patch request in the route /productions/{production} for the production name 'E 200L' to 'EC 200L' """
+    """Makes a patch request in the route /productions/{production} for the production name 'E 200L' to 'EC 200L'"""
     response = client.patch(
         "/productions/500",
         json={"name": "EC 200L"},
@@ -97,7 +97,7 @@ def test_empty_patch_production():
 
 
 def test_delete_production():
-    """Makes a delete request in the route /productions/{production} for the production code '500' """
+    """Makes a delete request in the route /productions/{production} for the production code '500'"""
     response = client.delete("/productions/500")
     assert response.status_code == 204
 
