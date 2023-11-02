@@ -151,3 +151,22 @@ def update_partial_production_by_code(code: int, production: ProductionOptional)
         new_unit=stored_model.unit,
         new_name=stored_model.name,
     )
+
+
+@router.delete(
+    "/{code}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a production"
+)
+def delete_production_by_code(code: int):
+    """
+    Delete a production using his code value
+
+    :parameter code:
+    """
+    db_production = fetch_production_by_code(code=code)
+    if not db_production:
+        raise HTTPException(
+            status_code=404,
+            detail="Production not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return delete_production(code=code)
