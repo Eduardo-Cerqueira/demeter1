@@ -51,3 +51,16 @@ def read_unit(unit: str):
             headers={"X-Error": "Resource not found"},
         )
     return {"data": unit}
+
+
+@router.put("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT)
+def update_unit_by_unit(unit_name: str, unit: Unit):
+    db_unit = fetch_unit_by_unit(unit=unit_name)
+    if not db_unit:
+        raise HTTPException(
+            status_code=404,
+            detail="Unit not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return update_unit(unit_value=unit.unit, unit=unit_name)
+
