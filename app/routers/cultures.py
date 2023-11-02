@@ -123,3 +123,32 @@ def read_culture(culture_id: UUID):
             headers={"X-Error": "Resource not found"},
         )
     return {"data": db_culture}
+
+
+@router.put(
+    "/{culture_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update a culture",
+)
+def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
+    """
+    Update one culture using his id value
+
+    :parameter culture_id:
+    :parameter culture:
+    """
+    db_culture = fetch_culture_by_id(culture_id=culture_id)
+    if not db_culture:
+        raise HTTPException(
+            status_code=404,
+            detail="Culture not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return update_culture(
+        culture_id=culture_id,
+        plot_number=culture.plot_number,
+        production_code=culture.production_code,
+        start_date=culture.start_date,
+        end_date=culture.end_date,
+        quantity=culture.quantity,
+    )
