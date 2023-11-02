@@ -77,3 +77,24 @@ def create_production(production: Production):
     return insert_production(
         code=production.code, unit=production.unit, name=production.name
     )
+
+
+@router.get("/{code}", status_code=status.HTTP_200_OK, summary="Fetch one production")
+def read_production(code: int):
+    """
+    Fetch one production with all the information:
+
+    - **code**: each code have a designation
+    - **unit**: each unit have a designation
+    - **name**: each name have a designation
+
+    :parameter code:
+    """
+    db_code = fetch_production_by_code(code=code)
+    if not db_code:
+        raise HTTPException(
+            status_code=404,
+            detail="Production not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return {"data": db_code}
