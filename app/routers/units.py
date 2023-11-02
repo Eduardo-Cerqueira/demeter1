@@ -19,20 +19,32 @@ router = APIRouter(
 
 
 class Unit(BaseModel):
+    """Basic Unit class for route validation"""
     unit: str
 
 
 class UnitOptional(BaseModel):
+    """Unit class for route validation when values can be optional"""
     unit: Optional[str] = None
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all units")
 def read_units():
+    """
+    Fetch all units with all the information:
+
+    - **unit**: each unit have a designation
+    """
     return {"data": fetch_all_unit()}
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one unit")
 def create_unit(unit: Unit):
+    """
+    Create a unit with all the information:
+
+    - **unit**: each unit must have a designation
+    """
     if not unit.unit:
         raise HTTPException(
             status_code=400,
@@ -48,8 +60,15 @@ def create_unit(unit: Unit):
         )
 
 
-@router.get("/{unit}", status_code=status.HTTP_200_OK)
+@router.get("/{unit}", status_code=status.HTTP_200_OK, summary="Fetch one unit")
 def read_unit(unit: str):
+    """
+    Fetch one unit with all the information:
+
+    - **unit**: each unit have a designation
+
+    :parameter unit:
+    """
     db_unit = fetch_unit_by_unit(unit=unit)
     if not db_unit:
         raise HTTPException(
@@ -60,8 +79,14 @@ def read_unit(unit: str):
     return {"data": unit}
 
 
-@router.put("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update a unit")
 def update_unit_by_unit(unit_name: str, unit: Unit):
+    """
+    Update one unit using his unit value
+
+    :parameter unit_name:
+    :parameter unit:
+    """
     db_unit = fetch_unit_by_unit(unit=unit_name)
     if not db_unit:
         raise HTTPException(
@@ -72,8 +97,14 @@ def update_unit_by_unit(unit_name: str, unit: Unit):
     return update_unit(unit_value=unit.unit, unit=unit_name)
 
 
-@router.patch("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT)
+@router.patch("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update partially a unit")
 def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
+    """
+    Update one unit partially using his unit value
+
+    :parameter unit_name:
+    :parameter unit:
+    """
     db_unit = fetch_unit_by_unit(unit=unit_name)
     stored_model = UnitOptional(**unit.model_dump())
     if not db_unit:
@@ -85,10 +116,15 @@ def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
     return partial_update_unit(unit_value=stored_model.unit, unit=unit_name)
 
 
-@router.delete("/{unit}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{unit}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a unit")
 def delete_unit_by_unit(unit: str):
-    unit = fetch_unit_by_unit(unit=unit)
-    if not unit:
+    """
+    Delete a unit using his unit value
+
+    :parameter unit:
+    """
+    db_unit = fetch_unit_by_unit(unit=unit)
+    if not db_unit:
         raise HTTPException(
             status_code=404,
             detail="Unit not found",
