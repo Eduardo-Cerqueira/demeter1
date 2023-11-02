@@ -64,3 +64,14 @@ def update_unit_by_unit(unit_name: str, unit: Unit):
         )
     return update_unit(unit_value=unit.unit, unit=unit_name)
 
+
+@router.delete("/{unit}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_unit_by_unit(unit: str):
+    unit = fetch_unit_by_unit(unit=unit)
+    if not unit:
+        raise HTTPException(
+            status_code=404,
+            detail="Unit not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return delete_unit(unit=unit)
