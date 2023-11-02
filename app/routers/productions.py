@@ -124,3 +124,30 @@ def update_production_by_code(code: int, production: UpdateProduction):
         new_unit=production.unit,
         new_name=production.name,
     )
+
+
+@router.patch(
+    "/{code}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update partially a production",
+)
+def update_partial_production_by_code(code: int, production: ProductionOptional):
+    """
+    Update one production partially using his code value
+
+    :parameter code:
+    :parameter production:
+    """
+    db_production = fetch_production_by_code(code=code)
+    stored_model = ProductionOptional(**production.model_dump())
+    if not db_production:
+        raise HTTPException(
+            status_code=404,
+            detail="Production not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return partial_update_production(
+        code=code,
+        new_unit=stored_model.unit,
+        new_name=stored_model.name,
+    )
