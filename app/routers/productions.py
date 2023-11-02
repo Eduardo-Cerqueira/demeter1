@@ -98,3 +98,29 @@ def read_production(code: int):
             headers={"X-Error": "Resource not found"},
         )
     return {"data": db_code}
+
+
+@router.put(
+    "/{code}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update a production",
+)
+def update_production_by_code(code: int, production: UpdateProduction):
+    """
+    Update one production using his code value
+
+    :parameter code:
+    :parameter production:
+    """
+    db_production = fetch_production_by_code(code=code)
+    if not db_production:
+        raise HTTPException(
+            status_code=404,
+            detail="Production not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return update_production(
+        code=code,
+        new_unit=production.unit,
+        new_name=production.name,
+    )
