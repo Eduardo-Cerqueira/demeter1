@@ -182,3 +182,22 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
         end_date=stored_model.end_date,
         quantity=stored_model.quantity,
     )
+
+
+@router.delete(
+    "/{culture_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a culture"
+)
+def delete_culture_by_id(culture_id: int):
+    """
+    Delete a culture using his id value
+
+    :parameter culture_id:
+    """
+    db_culture = fetch_culture_by_id(culture_id=culture_id)
+    if not db_culture:
+        raise HTTPException(
+            status_code=404,
+            detail="Culture not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return delete_culture(culture_id=culture_id)
