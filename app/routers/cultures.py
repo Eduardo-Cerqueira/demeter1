@@ -144,7 +144,7 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
-    return update_culture(
+    update_culture(
         culture_id=culture_id,
         plot_number=culture.plot_number,
         production_code=culture.production_code,
@@ -152,6 +152,7 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
         end_date=culture.end_date,
         quantity=culture.quantity,
     )
+    return {"message": "success"}
 
 
 @router.patch(
@@ -174,7 +175,7 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
-    return partial_update_culture(
+    partial_update_culture(
         culture_id=culture_id,
         plot_number=stored_model.plot_number,
         production_code=stored_model.production_code,
@@ -182,6 +183,7 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
         end_date=stored_model.end_date,
         quantity=stored_model.quantity,
     )
+    return {"message": "success"}
 
 
 @router.delete(
@@ -200,4 +202,5 @@ def delete_culture_by_id(culture_id: int):
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
-    return delete_culture(culture_id=culture_id)
+    delete_culture(culture_id=culture_id)
+    return {"message": "success"}
