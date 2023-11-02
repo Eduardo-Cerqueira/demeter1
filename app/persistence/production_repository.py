@@ -34,6 +34,19 @@ def fetch_all_production() -> list[str] | Exception:
         return error
 
 
+def fetch_production_by_code(code: str) -> list[str] | Exception:
+    """Returns a list of string representing a production filtered by the code field inside the table production.
+    If this nothing is found, it will return a single empty array.
+    :return: A list of string unit
+    :rtype: list[str] | Exception
+    """
+    try:
+        db.execute("SELECT * FROM production WHERE code = %s", [code])
+        return db.fetchone()
+    except Exception as error:
+        return error
+
+
 def insert_production(unit: str, name: str) -> None | Exception:
     """Insert production row into table production.
     :parameter unit:
@@ -59,7 +72,9 @@ def update_production(unit: str, name: str) -> None | Exception:
     :rtype: None | Exception
     """
     try:
-        db.execute("UPDATE production SET unit = %s, name = %s WHERE code = %s", [unit, name])
+        db.execute(
+            "UPDATE production SET unit = %s, name = %s WHERE code = %s", [unit, name]
+        )
     except Exception as error:
         return error
     finally:

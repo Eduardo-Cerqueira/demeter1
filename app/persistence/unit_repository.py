@@ -34,6 +34,19 @@ def fetch_all_unit() -> list[str] | Exception:
         return error
 
 
+def fetch_unit_by_unit(unit: str) -> list[str] | Exception:
+    """Returns a list of string representing a unit filtered by the unit field inside the table unit.
+    If this nothing is found, it will return a single empty array.
+    :return: A list of string unit
+    :rtype: list[str] | Exception
+    """
+    try:
+        db.execute("SELECT * FROM unit WHERE unit = %s", [unit])
+        return db.fetchone()
+    except Exception as error:
+        return error
+
+
 def insert_unit(unit: str) -> None | Exception:
     """Insert unit into table unit.
     :parameter unit:
