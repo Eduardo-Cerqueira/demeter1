@@ -22,3 +22,21 @@ class Unit(BaseModel):
 @router.get("/", status_code=status.HTTP_200_OK)
 def read_units():
     return {"data": fetch_all_unit()}
+
+
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def create_unit(unit: Unit):
+    if not unit.unit:
+        raise HTTPException(
+            status_code=400,
+            detail="Unit is empty",
+            headers={"X-Error": "Resource empty"},
+        )
+    db_unit = insert_unit(unit=unit.unit)
+    if db_unit is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="Unit already exists",
+            headers={"X-Error": "Resource already exists"},
+        )
+
