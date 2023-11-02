@@ -13,7 +13,7 @@ def connect_db():
     """
     database_name = os.getenv("DATABASE_NAME")
     database_host = os.getenv("DATABASE_HOST")
-    database_port = os.getenv("POSTGRES_PORT")
+    database_port = os.getenv("DATABASE_PORT")
     database_user = os.getenv("DATABASE_USER")
     database_password = os.getenv("DATABASE_PASSWORD")
 
@@ -100,16 +100,3 @@ def delete_plot(number):
     cur.execute("DELETE FROM plot WHERE number = %s", (number,))
     conn.commit()
     conn.close()
-
-# Test CRUD
-if __name__ == "__main__":
-    create_plot(1, 100, 'Plot A', 'Location A')
-    create_plot(2, 100, 'Plot B', 'Location B')
-    create_plot(3, 100, 'Plot C', 'Location C')
-    plots = get_plots()
-    for plot in plots:
-        print(plot)
-    plot = get_plot_by_number(1)
-    update_plot(1, 120, 'Plot D', 'Location D')
-    delete_plot(2)
-
