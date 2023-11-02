@@ -72,7 +72,7 @@ def get_spread_by_fertilizer(fertilizer_id):
     spread_dict = {
         "fertilizer_id": spread[0],
         "plot_number": spread[1],
-        "date": spread[2].isoformat(),
+        "date": spread[2],
         "spread_quantity": float(spread[3]),
     }
 
