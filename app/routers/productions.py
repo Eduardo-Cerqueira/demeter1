@@ -29,6 +29,7 @@ class Production(BaseModel):
 class UpdateProduction(BaseModel):
     """Production class for update route"""
 
+    code: int
     unit: str
     name: str
 
@@ -36,6 +37,7 @@ class UpdateProduction(BaseModel):
 class ProductionOptional(BaseModel):
     """Production class for route validation when values can be optional"""
 
+    code: Optional[int] = None
     unit: Optional[str] = None
     name: Optional[str] = None
 
@@ -101,18 +103,18 @@ def read_production(code: int):
 
 
 @router.put(
-    "/{code}",
+    "/{code_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update a production",
 )
-def update_production_by_code(code: int, production: UpdateProduction):
+def update_production_by_code(code_id: int, production: UpdateProduction):
     """
     Update one production using his code value
 
-    :parameter code:
+    :parameter code_id:
     :parameter production:
     """
-    db_production = fetch_production_by_code(code=code)
+    db_production = fetch_production_by_code(code=code_id)
     if not db_production:
         raise HTTPException(
             status_code=404,
@@ -120,25 +122,26 @@ def update_production_by_code(code: int, production: UpdateProduction):
             headers={"X-Error": "Resource not found"},
         )
     return update_production(
-        code=code,
+        code=code_id,
+        new_code=production.code,
         new_unit=production.unit,
         new_name=production.name,
     )
 
 
 @router.patch(
-    "/{code}",
+    "/{code_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update partially a production",
 )
-def update_partial_production_by_code(code: int, production: ProductionOptional):
+def update_partial_production_by_code(code_id: int, production: ProductionOptional):
     """
     Update one production partially using his code value
 
-    :parameter code:
+    :parameter code_id:
     :parameter production:
     """
-    db_production = fetch_production_by_code(code=code)
+    db_production = fetch_production_by_code(code=code_id)
     stored_model = ProductionOptional(**production.model_dump())
     if not db_production:
         raise HTTPException(
@@ -147,7 +150,8 @@ def update_partial_production_by_code(code: int, production: ProductionOptional)
             headers={"X-Error": "Resource not found"},
         )
     return partial_update_production(
-        code=code,
+        code=code_id,
+        new_code=stored_model.code,
         new_unit=stored_model.unit,
         new_name=stored_model.name,
     )

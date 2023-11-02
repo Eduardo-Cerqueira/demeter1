@@ -68,7 +68,7 @@ def insert_production(code: int, unit: str, name: str) -> None | Exception:
         conn.commit()
 
 
-def update_production(code: int, new_unit: str, new_name: str) -> None | Exception:
+def update_production(code: int, new_code: int, new_unit: str, new_name: str) -> None | Exception:
     """
     Update production row using his code field to filter from table production.
     :parameter code:
@@ -79,8 +79,8 @@ def update_production(code: int, new_unit: str, new_name: str) -> None | Excepti
     """
     try:
         db.execute(
-            "UPDATE production SET unit = %s, name = %s WHERE code = %s",
-            [new_unit, new_name, code],
+            "UPDATE production SET code = %s, unit = %s, name = %s WHERE code = %s",
+            [new_code, new_unit, new_name, code],
         )
     except Exception as error:
         return error
@@ -89,10 +89,11 @@ def update_production(code: int, new_unit: str, new_name: str) -> None | Excepti
 
 
 def partial_update_production(
-    code: int, new_unit: str, new_name: str
+    code: int, new_code: int, new_unit: str, new_name: str
 ) -> None | Exception:
     """Partially update production row using his code field to filter from table unit.
     :parameter code:
+    :parameter new_code:
     :parameter new_unit:
     :parameter new_name:
     :return: Nothing or an error
@@ -100,9 +101,9 @@ def partial_update_production(
     """
     try:
         db.execute(
-            "UPDATE production SET unit = COALESCE(%s, unit), name = COALESCE(%s, "
-            "name) WHERE code = %s",
-            [new_unit, new_name, code],
+            "UPDATE production SET code = COALESCE(%s, code), unit = COALESCE(%s, unit), "
+            "name = COALESCE(%s, name) WHERE code = %s",
+            [new_code, new_unit, new_name, code],
         )
     except Exception as error:
         return error
