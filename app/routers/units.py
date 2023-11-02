@@ -40,3 +40,14 @@ def create_unit(unit: Unit):
             headers={"X-Error": "Resource already exists"},
         )
 
+
+@router.get("/{unit}", status_code=status.HTTP_200_OK)
+def read_unit(unit: str):
+    db_unit = fetch_unit_by_unit(unit=unit)
+    if not db_unit:
+        raise HTTPException(
+            status_code=404,
+            detail="Unit not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    return {"data": unit}
