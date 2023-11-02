@@ -20,11 +20,13 @@ router = APIRouter(
 
 class Unit(BaseModel):
     """Basic Unit class for route validation"""
+
     unit: str
 
 
 class UnitOptional(BaseModel):
     """Unit class for route validation when values can be optional"""
+
     unit: Optional[str] = None
 
 
@@ -79,7 +81,9 @@ def read_unit(unit: str):
     return {"data": unit}
 
 
-@router.put("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update a unit")
+@router.put(
+    "/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update a unit"
+)
 def update_unit_by_unit(unit_name: str, unit: Unit):
     """
     Update one unit using his unit value
@@ -97,7 +101,11 @@ def update_unit_by_unit(unit_name: str, unit: Unit):
     return update_unit(unit_value=unit.unit, unit=unit_name)
 
 
-@router.patch("/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update partially a unit")
+@router.patch(
+    "/{unit_name}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update partially a unit",
+)
 def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
     """
     Update one unit partially using his unit value
@@ -116,7 +124,9 @@ def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
     return partial_update_unit(unit_value=stored_model.unit, unit=unit_name)
 
 
-@router.delete("/{unit}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a unit")
+@router.delete(
+    "/{unit}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a unit"
+)
 def delete_unit_by_unit(unit: str):
     """
     Delete a unit using his unit value
