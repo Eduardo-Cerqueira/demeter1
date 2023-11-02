@@ -26,7 +26,7 @@ db = conn.cursor()
 def fetch_all_unit() -> list[tuple[Any, ...]] | Exception:
     """Returns a list of string representing all units inside the table unit.
     If this nothing is found, it will return a single empty array.
-    :return: A list of string unit
+    :return: A list of tuples containing string unit
     :rtype: list[tuple[str]] | Exception
     """
     try:
@@ -39,7 +39,7 @@ def fetch_all_unit() -> list[tuple[Any, ...]] | Exception:
 def fetch_unit_by_unit(unit: str) -> tuple[Any, ...] | None | Exception:
     """Returns a list of string representing a unit filtered by the unit field inside the table unit.
     If this nothing is found, it will return a single empty array.
-    :return: A list of string unit
+    :return: A list of tuples containing string unit
     :rtype: list[tuple[str]] | Exception
     """
     try:
