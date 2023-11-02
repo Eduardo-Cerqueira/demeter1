@@ -43,9 +43,7 @@ def read_plots():
     :return dict: A dict of for the query response.
     """
     resources = get_plots()
-    query_status = status.HTTP_200_OK
-    query_message = "Plots found"
-    return {"status": query_status, "data": resources, "message": query_message}
+    return {"status": status.HTTP_200_OK, "data": resources, "message": "Plots found"}
 
 
 @router.get("/plots/{number}")
