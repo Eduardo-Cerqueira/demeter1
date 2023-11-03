@@ -44,7 +44,6 @@ def get_spreads():
         conn.close()
 
 
-
 def get_spread_by_fertilizer(fertilizer_id):
     """
     Get a spread by fertilizer_id.
@@ -65,6 +64,7 @@ def get_spread_by_fertilizer(fertilizer_id):
     finally:
         conn.close()
 
+
 def get_spreads_order_by_quantity(sort_type):
     """
     Get all the spread in the database.
@@ -83,7 +83,6 @@ def get_spreads_order_by_quantity(sort_type):
         return None
     finally:
         conn.close()
-
 
 
 def create_spread(fertilizer_id, plot_number, date, spread_quantity):
@@ -150,7 +149,11 @@ def partial_update_spread(fertilizer_id, plot_number, new_date, new_spread_quant
         cur.execute(
             "UPDATE spread SET date = COALESCE(%s, date), spread_quantity = COALESCE(%s, spread_quantity) WHERE "
             "fertilizer_id = %s",
-            (new_date, new_spread_quantity, fertilizer_id,),
+            (
+                new_date,
+                new_spread_quantity,
+                fertilizer_id,
+            ),
         )
     except Exception as error:
         return error
@@ -175,4 +178,3 @@ def delete_spread(fertilizer_id):
     finally:
         conn.commit()
         conn.close()
-

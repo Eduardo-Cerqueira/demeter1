@@ -90,7 +90,11 @@ def create_own(fertilizer_id, element_code, value):
     cur = conn.cursor()
     cur.execute(
         "INSERT INTO own (fertilizer_id, element_code, value) VALUES (%s, %s, %s)",
-        (fertilizer_id, element_code, value,),
+        (
+            fertilizer_id,
+            element_code,
+            value,
+        ),
     )
     conn.commit()
     conn.close()

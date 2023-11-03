@@ -11,6 +11,7 @@ app.include_router(spreads.router)
 app.include_router(cultures.router)
 app.include_router(fertilizers.router)
 
+
 @app.get("/")
 def read_root():
     return {"message": "Hello World"}
