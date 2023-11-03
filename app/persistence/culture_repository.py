@@ -46,7 +46,7 @@ def fetch_culture_by_id(culture_id: UUID) -> tuple[Any, ...] | None | Exception:
     :rtype: list[tuple[str]] | Exception
     """
     try:
-        db.execute("SELECT * FROM culture WHERE id = %s", [culture_id])
+        db.execute("SELECT * FROM culture WHERE id = %s", [str(culture_id)])
         return db.fetchone()
     except Exception as error:
         return error
@@ -102,7 +102,14 @@ def update_culture(
         db.execute(
             "UPDATE culture SET plot_number = %s, production_code = %s, start_date = %s, end_date = %s, "
             "quantity = %s WHERE id = %s",
-            [plot_number, production_code, start_date, end_date, quantity, culture_id],
+            [
+                plot_number,
+                production_code,
+                start_date,
+                end_date,
+                quantity,
+                str(culture_id),
+            ],
         )
     except Exception as error:
         return error
@@ -133,7 +140,14 @@ def partial_update_culture(
             "UPDATE culture SET plot_number = COALESCE(%s, plot_number), "
             "production_code = COALESCE(%s, production_code), start_date = COALESCE(%s, start_date), "
             "end_date = COALESCE(%s, end_date), quantity = COALESCE(%s, quantity) WHERE id = %s",
-            [plot_number, production_code, start_date, end_date, quantity, culture_id],
+            [
+                plot_number,
+                production_code,
+                start_date,
+                end_date,
+                quantity,
+                str(culture_id),
+            ],
         )
     except Exception as error:
         return error
@@ -149,7 +163,7 @@ def delete_culture(culture_id: UUID) -> None | Exception:
     :rtype: None | Exception
     """
     try:
-        db.execute("DELETE FROM culture WHERE id = %s", [culture_id])
+        db.execute("DELETE FROM culture WHERE id = %s", [str(culture_id)])
     except Exception as error:
         return error
     finally:
