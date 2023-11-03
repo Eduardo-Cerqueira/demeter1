@@ -1,3 +1,5 @@
+from typing import Any
+
 import psycopg2
 import os
 from dotenv import load_dotenv
@@ -21,11 +23,11 @@ conn = psycopg2.connect(
 db = conn.cursor()
 
 
-def fetch_all_unit() -> list[str] | Exception:
+def fetch_all_unit() -> list[tuple[Any, ...]] | Exception:
     """Returns a list of string representing all units inside the table unit.
     If this nothing is found, it will return a single empty array.
-    :return: A list of string unit
-    :rtype: list[str] | Exception
+    :return: A list of tuples containing string unit
+    :rtype: list[tuple[str]] | Exception
     """
     try:
         db.execute("SELECT * FROM unit")
@@ -34,11 +36,11 @@ def fetch_all_unit() -> list[str] | Exception:
         return error
 
 
-def fetch_unit_by_unit(unit: str) -> list[str] | Exception:
+def fetch_unit_by_unit(unit: str) -> tuple[Any, ...] | None | Exception:
     """Returns a list of string representing a unit filtered by the unit field inside the table unit.
     If this nothing is found, it will return a single empty array.
-    :return: A list of string unit
-    :rtype: list[str] | Exception
+    :return: A list of tuples containing string unit
+    :rtype: list[tuple[str]] | Exception
     """
     try:
         db.execute("SELECT * FROM unit WHERE unit = %s", [unit])
@@ -55,22 +57,40 @@ def insert_unit(unit: str) -> None | Exception:
     """
     try:
         db.execute("INSERT INTO unit(unit) VALUES(%s)", [unit])
-        print(type(db.lastrowid))
     except Exception as error:
         return error
     finally:
         conn.commit()
 
 
-def update_unit(unit: str) -> None | Exception:
+def update_unit(unit_value: str, unit: str) -> None | Exception:
     """
     Update unit field using his unit field to filter from table unit.
+    :parameter unit_value:
     :parameter unit:
     :return: Nothing or an error
     :rtype: None | Exception
     """
     try:
-        db.execute("UPDATE unit SET unit = %s WHERE unit = %s", [unit])
+        db.execute("UPDATE unit SET unit = %s WHERE unit = %s", [unit_value, unit])
+    except Exception as error:
+        return error
+    finally:
+        conn.commit()
+
+
+def partial_update_unit(unit_value: str, unit: str) -> None | Exception:
+    """Partially update unit row using his unit field to filter from table unit.
+    :parameter unit_value:
+    :parameter unit:
+    :return: Nothing or an error
+    :rtype: None | Exception
+    """
+    try:
+        db.execute(
+            "UPDATE unit SET unit = COALESCE(%s, unit) WHERE unit = %s",
+            [unit_value, unit],
+        )
     except Exception as error:
         return error
     finally:
