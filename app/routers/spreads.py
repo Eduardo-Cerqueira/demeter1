@@ -38,6 +38,10 @@ def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = "ASC"):
     """
     Get all spread resources.
 
+    :param skip: The number of row to skip.
+    :parma limit: The number of row to display.
+    :sort_quantity str: The type of sort to use, ASC or DESC
+
     :return dict: A dict of the query response.
     """
     if sort_quantity:
