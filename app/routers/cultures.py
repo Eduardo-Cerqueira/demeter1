@@ -1,8 +1,8 @@
 from datetime import date
-from typing import Optional
+from typing import Optional, Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Body
 from pydantic import BaseModel
 
 from app.persistence.culture_repository import (
@@ -51,7 +51,39 @@ class CultureOptional(BaseModel):
     quantity: Optional[int] = None
 
 
-@router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all cultures")
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch all cultures",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": [
+                            [
+                                "70dab050-0266-4d47-93c9-2a6fed5e3588",
+                                100,
+                                300,
+                                "2023-09-08",
+                                "2023-12-10",
+                                20,
+                            ],
+                            [
+                                "e295798f-5e06-4473-a4fd-c70ae8c96ef8",
+                                200,
+                                150,
+                                "2022-10-30",
+                                "2024-01-04",
+                                50,
+                            ],
+                        ]
+                    }
+                }
+            }
+        },
+    },
+)
 def read_cultures():
     """
     Fetch all cultures with all the information:
@@ -66,8 +98,42 @@ def read_cultures():
     return {"data": fetch_all_culture()}
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one culture")
-def create_culture(culture: Culture):
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    summary="Create one culture",
+    responses={
+        201: {
+            "description": "Created",
+        },
+        400: {
+            "content": {
+                "application/json": {"example": {"detail": "Culture is empty"}}
+            },
+        },
+        409: {
+            "content": {
+                "application/json": {"example": {"detail": "Culture already exists"}}
+            },
+        },
+    },
+)
+def create_culture(
+    culture: Annotated[
+        CreateUpdateCulture,
+        Body(
+            examples=[
+                {
+                    "plot_number": 50,
+                    "production_code": 200,
+                    "start_date": "2023-01-01",
+                    "end_date": "2023-02-01",
+                    "quantity": 100,
+                }
+            ],
+        ),
+    ],
+):
     """
     Create a culture with all the information:
 
@@ -100,7 +166,27 @@ def create_culture(culture: Culture):
 
 
 @router.get(
-    "/{culture_id}", status_code=status.HTTP_200_OK, summary="Fetch one culture"
+    "/{culture_id}",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch one culture",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": [
+                            "70dab050-0266-4d47-93c9-2a6fed5e3588",
+                            100,
+                            300,
+                            "2023-09-08",
+                            "2023-12-10",
+                            20,
+                        ]
+                    }
+                }
+            }
+        },
+    },
 )
 def read_culture(culture_id: UUID):
     """
@@ -129,6 +215,16 @@ def read_culture(culture_id: UUID):
     "/{culture_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update a culture",
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Culture not found"}}
+            },
+        },
+    },
 )
 def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
     """
@@ -159,6 +255,16 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
     "/{culture_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update partially a culture",
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Culture not found"}}
+            },
+        },
+    },
 )
 def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
     """
@@ -187,7 +293,16 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
 
 
 @router.delete(
-    "/{culture_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a culture"
+    "/{culture_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a culture",
+    responses={
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Culture not found"}}
+            },
+        },
+    },
 )
 def delete_culture_by_id(culture_id: int):
     """
