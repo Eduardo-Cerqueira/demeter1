@@ -120,7 +120,7 @@ def update_spread_by_fertilizer(fertilizer_id: str, spread: Spread):
         raise HTTPException(status_code=404, detail="Spread not found")
     update_spread(
         fertilizer_id=fertilizer_id,
-        plot_number=spred.plot_number,
+        plot_number=spread.plot_number,
         new_date=spread.date,
         new_spread_quantity=spread.spread_quantity,
     )
@@ -143,7 +143,7 @@ def partial_update_spread_by_fertilizer(
         raise HTTPException(status_code=404, detail="Spread not found")
     partial_update_spread(
         fertilizer_id=fertilizer_id,
-        plot_number=spred.plot_number,
+        plot_number=spread.plot_number,
         new_date=spread.date,
         new_spread_quantity=spread.spread_quantity,
     )
