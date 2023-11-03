@@ -65,6 +65,23 @@ def get_spread_by_fertilizer(fertilizer_id):
     finally:
         conn.close()
 
+def get_spreads_order_by_quantity():
+    """
+    Get all the spread in the database.
+
+    :return: A list of all spread or an Exception.
+    """
+    conn = connect_db()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT * FROM spread ORDER BY spread_quantity ASC")
+        return cur.fetchall()
+    except Exception:
+        return None
+    finally:
+        conn.close()
+
+
 
 def create_spread(fertilizer_id, plot_number, date, spread_quantity):
     """

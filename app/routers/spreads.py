@@ -9,6 +9,7 @@ from app.persistence.spread_repository import (
     partial_update_spread,
     delete_spread,
     create_spread,
+    get_spreads_order_by_quantity
 )
 
 router = APIRouter(tags=["spread"])
@@ -33,13 +34,17 @@ class SpreadOptional(BaseModel):
 
 
 @router.get("/spreads", status_code=status.HTTP_200_OK)
-def read_spreads(skip: int = 0, limit: int = 10):
+def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = False):
     """
     Get all spread resources.
 
     :return dict: A dict of the query response.
     """
-    resources = get_spreads()[skip : skip + limit]
+    if sort_quantity:
+        resources = get_spreads_order_by_quantity()[skip : skip + limit]
+    else:
+        resources = get_spreads()[skip : skip + limit]
+
     if not resources:
         raise HTTPException(status_code=404, detail="Spreads not found")
     resources_list = []
