@@ -34,14 +34,14 @@ class SpreadOptional(BaseModel):
 
 
 @router.get("/spreads", status_code=status.HTTP_200_OK)
-def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = False):
+def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = "ASC"):
     """
     Get all spread resources.
 
     :return dict: A dict of the query response.
     """
     if sort_quantity:
-        resources = get_spreads_order_by_quantity()[skip : skip + limit]
+        resources = get_spreads_order_by_quantity(sort_quantity)[skip : skip + limit]
     else:
         resources = get_spreads()[skip : skip + limit]
 

@@ -65,7 +65,7 @@ def get_spread_by_fertilizer(fertilizer_id):
     finally:
         conn.close()
 
-def get_spreads_order_by_quantity():
+def get_spreads_order_by_quantity(sort_type):
     """
     Get all the spread in the database.
 
@@ -74,7 +74,10 @@ def get_spreads_order_by_quantity():
     conn = connect_db()
     cur = conn.cursor()
     try:
-        cur.execute("SELECT * FROM spread ORDER BY spread_quantity ASC")
+        if sort_type.lower() == "asc":
+            cur.execute("SELECT * FROM spread ORDER BY spread_quantity ASC")
+        else:
+            cur.execute("SELECT * FROM spread ORDER BY spread_quantity DESC")
         return cur.fetchall()
     except Exception:
         return None
