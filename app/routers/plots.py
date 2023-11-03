@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-from demeter.app.persistence.plot_repository import (
+from app.persistence.plot_repository import (
     get_plots,
     get_plot_by_number,
     update_plot,

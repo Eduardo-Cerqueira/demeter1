@@ -127,7 +127,7 @@ def partial_update_fertilizer(identifier, unit, name):
         (unit, name, identifier),
     )
     conn.commit()
-    conn.close()
+
 
 
 def delete_fertilizer(identifier: UUID):
