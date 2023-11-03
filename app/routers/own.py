@@ -11,7 +11,10 @@ from demeter.app.persistence.own_repository import (
     create_own,
 )
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/owns",
+    tags=["owns"],
+)
 
 
 class Own(BaseModel):
