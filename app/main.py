@@ -12,6 +12,7 @@ app.include_router(spreads.router)
 app.include_router(cultures.router)
 app.include_router(fertilizers.router)
 
+
 @app.exception_handler(Exception)
 async def validation_exception_handler(request: Request, exc: Exception):
     # Change here to Logger

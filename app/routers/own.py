@@ -77,7 +77,9 @@ def create_new_own(own: Own):
             status_code=409, detail=f"Own {own.fertilizer_id} already exists"
         )
     create_own(
-        fertilizer_id=own.fertilizer_id, element_code=own.element_code, value=own.value,
+        fertilizer_id=own.fertilizer_id,
+        element_code=own.element_code,
+        value=own.value,
     )
     return {"status": status.HTTP_201_CREATED, "message": "Own successfully created"}
 
@@ -98,7 +100,6 @@ def update_own_by_fertilizer_id(fertilizer_id: str, own: Own):
         fertilizer_id=own.fertilizer_id,
         element_code=own.element_code,
         value=own.value,
-
     )
     return {"message": f"Own {fertilizer_id} successfully updated "}
 
@@ -116,7 +117,6 @@ def partial_update_own(fertilizer_id: str, own: OwnPatch):
     if not own_to_update:
         raise HTTPException(status_code=404, detail=f"Own {fertilizer_id} not found")
     partial_update_own(
-
         new_fertilizer_id=own.fertilizer_id,
         new_element_code=own.element_code,
         new_value=own.value,

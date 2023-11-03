@@ -216,9 +216,7 @@ def partial_update_plot_by_id(plot_id: int, plot: PlotPatch):
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         404: {
-            "content": {
-                "application/json": {"example": {"detail": "Plot not found"}}
-            },
+            "content": {"application/json": {"example": {"detail": "Plot not found"}}},
         },
     },
 )

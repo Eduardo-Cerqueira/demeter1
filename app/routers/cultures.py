@@ -95,7 +95,30 @@ def read_cultures():
     - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
-    return {"data": fetch_all_culture()}
+    db_cultures = fetch_all_culture()
+    if not db_cultures:
+        raise HTTPException(
+            status_code=404,
+            detail="Cultures not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    formatted_cultures = []
+    for culture in db_cultures:
+        formatted_cultures.append(
+            {
+                "id": culture[0],
+                "plot_number": culture[1],
+                "production_code": culture[2],
+                "start_date": culture[3],
+                "end_date": culture[4],
+                "quantity": culture[5],
+            }
+        )
+    return {
+        "status": status.HTTP_200_OK,
+        "data": formatted_cultures,
+        "message": "Cultures found",
+    }
 
 
 @router.post(
@@ -208,7 +231,18 @@ def read_culture(culture_id: UUID):
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
-    return {"data": db_culture}
+    return {
+        "status": status.HTTP_200_OK,
+        "data": {
+            "id": db_culture[0],
+            "plot_number": db_culture[1],
+            "production_code": db_culture[2],
+            "start_date": db_culture[3],
+            "end_date": db_culture[4],
+            "quantity": db_culture[5],
+        },
+        "message": "Culture found",
+    }
 
 
 @router.put(

@@ -26,28 +26,30 @@ db = conn.cursor()
 
 def get_fertilizers():
     """
-        Get all fertilizers in the database.
+    Get all fertilizers in the database.
 
-        :return: A list of all fertilizers.
+    :return: A list of all fertilizers.
     """
     db.execute("SELECT * FROM fertilizer")
     fertilizers = db.fetchall()
     new_fertilizers = []
     for f in fertilizers:
-        new_fertilizers.append({
-            "id": f[0],
-            "unit": f[1],
-            "name": f[2],
-        })
+        new_fertilizers.append(
+            {
+                "id": f[0],
+                "unit": f[1],
+                "name": f[2],
+            }
+        )
     return new_fertilizers
 
 
 def get_fertilizer_by_id(identifier: UUID):
     """
-        Get a fertilizer by his identifier.
+    Get a fertilizer by his identifier.
 
-        :param (uuid) identifier: The fertilizer identifier.
-        :return: A tuple with the fertilizer's data.
+    :param (uuid) identifier: The fertilizer identifier.
+    :return: A tuple with the fertilizer's data.
     """
     db.execute("SELECT * FROM fertilizer WHERE id = %s", (str(identifier),))
     fertilizer = db.fetchone()
@@ -63,10 +65,10 @@ def get_fertilizer_by_id(identifier: UUID):
 
 def get_fertilizer_by_name(name: str):
     """
-        Get a fertilizer by his name.
+    Get a fertilizer by his name.
 
-        :param (string) name: The fertilizer name.
-        :return: A tuple with the fertilizer's data.
+    :param (string) name: The fertilizer name.
+    :return: A tuple with the fertilizer's data.
     """
     db.execute("SELECT * FROM fertilizer WHERE name = %s", (name,))
     fertilizer = db.fetchone()
@@ -82,10 +84,10 @@ def get_fertilizer_by_name(name: str):
 
 def create_fertilizer(unit, name):
     """
-        Create a new fertilizer in the database.
+    Create a new fertilizer in the database.
 
-        :param (string) unit: The fertilizer unit.
-        :param (string) name: The fertilizer's name.
+    :param (string) unit: The fertilizer unit.
+    :param (string) name: The fertilizer's name.
     """
     existing_fertilizer = get_fertilizer_by_name(name)
     if existing_fertilizer is not None:
@@ -96,13 +98,16 @@ def create_fertilizer(unit, name):
 
 def update_fertilizer(identifier, unit, name):
     """
-        Update fertilizer information by his identifier.
+    Update fertilizer information by his identifier.
 
-        :param (uuid) identifier: The fertilizer identifier to update.
-        :param (string) unit: The new unit of the fertilizer.
-        :param (string) name: The new name of the fertilizer.
+    :param (uuid) identifier: The fertilizer identifier to update.
+    :param (string) unit: The new unit of the fertilizer.
+    :param (string) name: The new name of the fertilizer.
     """
-    db.execute("UPDATE fertilizer SET unit = %s, name = %s WHERE id = %s", (unit, name, identifier))
+    db.execute(
+        "UPDATE fertilizer SET unit = %s, name = %s WHERE id = %s",
+        (unit, name, identifier),
+    )
     conn.commit()
 
 
@@ -127,9 +132,9 @@ def partial_update_fertilizer(identifier, unit, name):
 
 def delete_fertilizer(identifier: UUID):
     """
-        Delete a fertilizer by its identifier.
+    Delete a fertilizer by its identifier.
 
-        :param (uuid) identifier: The fertilizer identifier to delete.
+    :param (uuid) identifier: The fertilizer identifier to delete.
     """
     existing_fertilizer = get_fertilizer_by_id(identifier)
     if existing_fertilizer is None:
