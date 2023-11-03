@@ -30,7 +30,16 @@ class UnitOptional(BaseModel):
     unit: Optional[str] = None
 
 
-@router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all units")
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch all units",
+    responses={
+        200: {
+            "content": {"application/json": {"example": {"data": [["foo"], ["bar"]]}}},
+        },
+    },
+)
 def read_units():
     """
     Fetch all units with all the information:
@@ -40,7 +49,24 @@ def read_units():
     return {"data": fetch_all_unit()}
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one unit")
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    summary="Create one unit",
+    responses={
+        201: {
+            "description": "Created",
+        },
+        400: {
+            "content": {"application/json": {"example": {"detail": "Unit is empty"}}},
+        },
+        409: {
+            "content": {
+                "application/json": {"example": {"detail": "Unit already exists"}}
+            },
+        },
+    },
+)
 def create_unit(unit: Unit):
     """
     Create a unit with all the information:
@@ -63,14 +89,21 @@ def create_unit(unit: Unit):
     return insert_unit(unit=unit.unit)
 
 
-@router.get("/{unit}", status_code=status.HTTP_200_OK, summary="Fetch one unit")
+@router.get(
+    "/{unit}",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch one unit",
+    responses={
+        404: {
+            "content": {"application/json": {"example": {"detail": "Unit not found"}}},
+        },
+    },
+)
 def read_unit(unit: str):
     """
     Fetch one unit with all the information:
 
     - **unit**: each unit have a designation
-
-    :parameter unit:
     """
     db_unit = fetch_unit_by_unit(unit=unit)
     if not db_unit:
@@ -83,7 +116,14 @@ def read_unit(unit: str):
 
 
 @router.put(
-    "/{unit_name}", status_code=status.HTTP_204_NO_CONTENT, summary="Update a unit"
+    "/{unit_name}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Update a unit",
+    responses={
+        404: {
+            "content": {"application/json": {"example": {"detail": "Unit not found"}}},
+        },
+    },
 )
 def update_unit_by_unit(unit_name: str, unit: Unit):
     """
@@ -106,6 +146,11 @@ def update_unit_by_unit(unit_name: str, unit: Unit):
     "/{unit_name}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update partially a unit",
+    responses={
+        404: {
+            "content": {"application/json": {"example": {"detail": "Unit not found"}}},
+        },
+    },
 )
 def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
     """
@@ -126,7 +171,14 @@ def update_partial_unit_by_unit(unit_name: str, unit: UnitOptional):
 
 
 @router.delete(
-    "/{unit}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a unit"
+    "/{unit}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a unit",
+    responses={
+        404: {
+            "content": {"application/json": {"example": {"detail": "Unit not found"}}},
+        },
+    },
 )
 def delete_unit_by_unit(unit: str):
     """
