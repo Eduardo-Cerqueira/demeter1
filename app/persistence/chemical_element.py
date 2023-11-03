@@ -28,7 +28,15 @@ def get_chemical_elements():
         :return: A list of all chemical_elements.
     """
     db.execute("SELECT * FROM chemical_element")
-    return db.fetchall()
+    chemical_elements = db.fetchall()
+    new_chemical_element = []
+    for c in chemical_elements:
+        new_chemical_element.append({
+            "code": c[0],
+            "unit": c[1],
+            "element_label": c[2],
+        })
+    return new_chemical_element
 
 
 def get_chemical_element_by_code(code: str):
@@ -39,7 +47,13 @@ def get_chemical_element_by_code(code: str):
         :return: A tuple with the chemical_element's data.
     """
     db.execute("SELECT * FROM chemical_element WHERE code = %s", (code,))
-    return db.fetchone()
+    chemical_element = db.fetchone()
+    new_chemical_element = {
+        "code": chemical_element[0],
+        "unit": chemical_element[1],
+        "element_label": chemical_element[2],
+    }
+    return new_chemical_element
 
 
 def create_chemical_elements(code: str, unit: str, element_label: str):
