@@ -52,7 +52,7 @@ def insert_counter(route: str, tag: str, count: int) -> None | Exception:
         conn.commit()
 
 
-def update_counter_count(route: str, tag: str, count: int) -> None | Exception:
+def update_counter_count(route: str, tag: str) -> None | Exception:
     """
     Update count field using his route and tag fields to filter from table counter.
     :parameter route:
@@ -62,7 +62,7 @@ def update_counter_count(route: str, tag: str, count: int) -> None | Exception:
     :rtype: None | Exception
     """
     try:
-        db.execute("UPDATE counter SET count = %s WHERE route = %s AND tag = %s", [count, route, tag])
+        db.execute("UPDATE counter SET count = count+1 WHERE route = %s AND tag = %s", [route, tag])
     except Exception as error:
         return error
     finally:

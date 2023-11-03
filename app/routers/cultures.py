@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, status, Body
 from pydantic import BaseModel
 
+from app.persistence.counter_repository import fetch_counter_by_tag_route, insert_counter, update_counter_count
 from app.persistence.culture_repository import (
     fetch_all_culture,
     fetch_culture_by_id,
@@ -13,6 +14,7 @@ from app.persistence.culture_repository import (
     delete_culture,
     partial_update_culture,
 )
+from app.persistence.log_repository import insert_log
 
 router = APIRouter(
     prefix="/cultures",
@@ -95,6 +97,13 @@ def read_cultures():
     - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="fetch_cultures")
+    if not counter:
+        insert_counter(route="cultures", tag="fetch_cultures", count=1)
+    else:
+        update_counter_count(route="cultures", tag="fetch_cultures")
+
+    insert_log(f"Fetch cultures: {fetch_all_culture} at route fetch_cultures on cultures")
     return {"data": fetch_all_culture()}
 
 
@@ -143,6 +152,12 @@ def create_culture(
     - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="create_culture")
+    if not counter:
+        insert_counter(route="cultures", tag="create_culture", count=1)
+    else:
+        update_counter_count(route="cultures", tag="create_culture")
+
     if not culture.id:
         raise HTTPException(
             status_code=400,
@@ -151,11 +166,13 @@ def create_culture(
         )
     db_culture = fetch_culture_by_id(culture_id=culture.id)
     if db_culture is not None:
+        insert_log("HTTPException 409 Culture not found at route fetch_one on cultures")
         raise HTTPException(
             status_code=409,
             detail="Culture already exists",
             headers={"X-Error": "Resource already exists"},
         )
+    insert_log(f"Insert cultures: {fetch_all_culture} at route create_culture on cultures")
     return insert_culture(
         plot_number=culture.plot_number,
         production_code=culture.production_code,
@@ -201,13 +218,21 @@ def read_culture(culture_id: UUID):
 
     :parameter culture_id:
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="fetch_one")
+    if not counter:
+        insert_counter(route="cultures", tag="fetch_one", count=1)
+    else:
+        update_counter_count(route="cultures", tag="fetch_one")
+
     db_culture = fetch_culture_by_id(culture_id=culture_id)
     if not db_culture:
+        insert_log("HTTPException 404 Culture not found at route fetch_one on cultures")
         raise HTTPException(
             status_code=404,
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Fetch {db_culture} at route fetch_one on cultures")
     return {"data": db_culture}
 
 
@@ -233,8 +258,15 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
     :parameter culture_id:
     :parameter culture:
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="update_by_id")
+    if not counter:
+        insert_counter(route="cultures", tag="update_by_id", count=1)
+    else:
+        update_counter_count(route="cultures", tag="update_by_id")
+
     db_culture = fetch_culture_by_id(culture_id=culture_id)
     if not db_culture:
+        insert_log("HTTPException 404 Culture not found at route update_by_id on cultures")
         raise HTTPException(
             status_code=404,
             detail="Culture not found",
@@ -248,6 +280,7 @@ def update_culture_by_id(culture_id: UUID, culture: CreateUpdateCulture):
         end_date=culture.end_date,
         quantity=culture.quantity,
     )
+    insert_log(f"Updated {db_culture} to {culture} at route update_by_id on cultures")
     return {"message": "success"}
 
 
@@ -273,9 +306,16 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
     :parameter culture_id:
     :parameter culture:
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="partial_update_by_id")
+    if not counter:
+        insert_counter(route="cultures", tag="partial_update_by_id", count=1)
+    else:
+        update_counter_count(route="cultures", tag="partial_update_by_id")
+
     db_culture = fetch_culture_by_id(culture_id=culture_id)
     stored_model = CultureOptional(**culture.model_dump())
     if not db_culture:
+        insert_log("HTTPException 404 Culture not found at route partial_update_by_id on cultures")
         raise HTTPException(
             status_code=404,
             detail="Culture not found",
@@ -289,6 +329,7 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
         end_date=stored_model.end_date,
         quantity=stored_model.quantity,
     )
+    insert_log(f"Updated {db_culture} to {stored_model} at route partial_update_by_id on cultures")
     return {"message": "success"}
 
 
@@ -304,18 +345,26 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
         },
     },
 )
-def delete_culture_by_id(culture_id: int):
+def delete_culture_by_id(culture_id: UUID):
     """
     Delete a culture using his id value
 
     :parameter culture_id:
     """
+    counter = fetch_counter_by_tag_route(route="cultures", tag="delete_culture")
+    if not counter:
+        insert_counter(route="cultures", tag="delete_culture", count=1)
+    else:
+        update_counter_count(route="cultures", tag="delete_culture")
+
     db_culture = fetch_culture_by_id(culture_id=culture_id)
     if not db_culture:
+        insert_log("HTTPException 404 Culture not found at route delete_culture on cultures")
         raise HTTPException(
             status_code=404,
             detail="Culture not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Deleted {db_culture} at route delete_culture on cultures")
     delete_culture(culture_id=culture_id)
     return {"message": "success"}
