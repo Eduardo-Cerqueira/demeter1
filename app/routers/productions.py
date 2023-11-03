@@ -26,14 +26,6 @@ class Production(BaseModel):
     name: str
 
 
-class UpdateProduction(BaseModel):
-    """Production class for update route"""
-
-    code: int
-    unit: str
-    name: str
-
-
 class ProductionOptional(BaseModel):
     """Production class for route validation when values can be optional"""
 
@@ -165,7 +157,7 @@ def read_production(code: int):
         },
     },
 )
-def update_production_by_code(code_id: int, production: UpdateProduction):
+def update_production_by_code(code_id: int, production: Production):
     """
     Update one production using his code value
 
