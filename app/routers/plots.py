@@ -11,7 +11,9 @@ from app.persistence.plot_repository import (
     create_plot,
 )
 
-router = APIRouter()
+router = APIRouter(
+    tags=["plots"]
+)
 
 
 class Plot(BaseModel):

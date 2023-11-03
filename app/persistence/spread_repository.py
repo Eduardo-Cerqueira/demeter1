@@ -69,7 +69,7 @@ def get_spreads_order_by_quantity(sort_type):
     """
     Get all the spread in the database.
 
-    :return: A list of all spread or an Exception.
+    :return: A list of all spread or None if no data.
     """
     conn = connect_db()
     cur = conn.cursor()
