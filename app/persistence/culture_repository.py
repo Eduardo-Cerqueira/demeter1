@@ -46,7 +46,7 @@ def fetch_culture_by_id(culture_id: UUID) -> tuple[Any, ...] | None | Exception:
     :rtype: list[tuple[str]] | Exception
     """
     try:
-        db.execute("SELECT * FROM culture WHERE id = %s", [culture_id])
+        db.execute("SELECT * FROM culture WHERE id = %s", [str(culture_id)])
         return db.fetchone()
     except Exception as error:
         return error
