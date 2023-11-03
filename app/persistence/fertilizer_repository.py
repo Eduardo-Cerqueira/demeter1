@@ -69,7 +69,7 @@ def create_fertilizer(unit, name):
 
 def update_fertilizer(identifier, unit, name):
     """
-        Update fertilizer information by its identifier.
+        Update fertilizer information by his identifier.
 
         :param (uuid) identifier: The fertilizer identifier to update.
         :param (string) unit: The new unit of the fertilizer.
@@ -77,6 +77,25 @@ def update_fertilizer(identifier, unit, name):
     """
     db.execute("UPDATE fertilizer SET unit = %s, name = %s WHERE id = %s", (unit, name, identifier))
     conn.commit()
+
+
+def partial_update_fertilizer(identifier, unit, name):
+    """
+    Partial update fertilizer information by his identifier.
+
+    :param (uuid) identifier: The plot identifier to update.
+    :param (string) unit: The new unit of the fertilizer.
+    :param (string) name: The new name of the fertilizer.
+    """
+    existing_fertlizer = get_fertilizer_by_id(identifier)
+    if existing_fertlizer is None:
+        raise Exception(f"Plot with number {identifier} not found")
+    db.execute(
+        "UPDATE fertilizer SET  unit = COALESCE(%s,unit), name = COALESCE(%s,unit) WHERE id = COALESCE(%s,id)",
+        (unit, name, identifier),
+    )
+    conn.commit()
+    conn.close()
 
 
 def delete_fertilizer(identifier):
