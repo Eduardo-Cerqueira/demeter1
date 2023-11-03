@@ -19,7 +19,7 @@ class Own(BaseModel):
     Own class for route validation
     """
 
-    fertilizer_id: int
+    fertilizer_id: str
     element_code: str
     value: int
 
@@ -46,7 +46,7 @@ def read_owns():
 
 
 @router.get("/owns/{fertilizer_id}")
-def read_own_by_fertilizer_id(fertilizer_id: int):
+def read_own_by_fertilizer_id(fertilizer_id: str):
     """
     Get own resource by its fertilizer_id.
 
@@ -81,7 +81,7 @@ def create_new_own(own: Own):
 
 
 @router.put("/owns/{fertilizer_id}")
-def update_own_by_fertilizer_id(fertilizer_id: int, own: Own):
+def update_own_by_fertilizer_id(fertilizer_id: str, own: Own):
     """
     Update own by its fertilizer_id.
 
@@ -102,7 +102,7 @@ def update_own_by_fertilizer_id(fertilizer_id: int, own: Own):
 
 
 @router.patch("/owns/{fertilizer_id}")
-def partial_update_own(fertilizer_id: int, own: OwnPatch):
+def partial_update_own(fertilizer_id: str, own: OwnPatch):
     """
     Partial update own by its number.
 
@@ -123,7 +123,7 @@ def partial_update_own(fertilizer_id: int, own: OwnPatch):
 
 
 @router.delete("/owns/{fertilizer_id}")
-def delete_own(fertilizer_id: int):
+def delete_own(fertilizer_id: str):
     """
     Delete own by its fertilizer_id.
 
