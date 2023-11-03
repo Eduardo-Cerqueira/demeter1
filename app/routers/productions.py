@@ -3,6 +3,9 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
+from app.persistence.counter_repository import fetch_counter_by_tag_route, insert_counter, update_counter_count
+from app.persistence.log_repository import insert_log
+
 from app.persistence.production_repository import (
     fetch_all_production,
     fetch_production_by_code,
@@ -58,6 +61,13 @@ def read_productions():
     - **unit**: each unit have a designation
     - **name**: each name have a designation
     """
+    counter = fetch_counter_by_tag_route(route="productions", tag="fetch_productions")
+    if not counter:
+        insert_counter(route="productions", tag="fetch_productions", count=1)
+    else:
+        update_counter_count(route="productions", tag="fetch_productions")
+
+    insert_log(f"Fetch cultures: {fetch_all_production()} at route fetch_productions on cultures")
     return {"data": fetch_all_production()}
 
 
@@ -89,7 +99,14 @@ def create_production(production: Production):
     - **unit**: each unit have a designation
     - **name**: each name have a designation
     """
+    counter = fetch_counter_by_tag_route(route="productions", tag="create_production")
+    if not counter:
+        insert_counter(route="productions", tag="create_production", count=1)
+    else:
+        update_counter_count(route="productions", tag="create_production")
+
     if not production.code:
+        insert_log("HTTPException 400 Production is empty at route create_production on productions")
         raise HTTPException(
             status_code=400,
             detail="Production is empty",
@@ -97,11 +114,13 @@ def create_production(production: Production):
         )
     db_production = fetch_production_by_code(code=production.code)
     if db_production is not None:
+        insert_log("HTTPException 409 Production already exists at route create_production on productions")
         raise HTTPException(
             status_code=409,
             detail="Production already exists",
             headers={"X-Error": "Resource already exists"},
         )
+    insert_log(f"Insert productions: {fetch_all_production()} at route create_production on productions")
     return insert_production(
         code=production.code, unit=production.unit, name=production.name
     )
@@ -132,13 +151,21 @@ def read_production(code: int):
 
     :parameter code:
     """
+    counter = fetch_counter_by_tag_route(route="productions", tag="fetch_one")
+    if not counter:
+        insert_counter(route="productions", tag="fetch_one", count=1)
+    else:
+        update_counter_count(route="productions", tag="fetch_one")
+
     db_code = fetch_production_by_code(code=code)
     if not db_code:
+        insert_log("HTTPException 404 Production not found at route fetch_one on productions")
         raise HTTPException(
             status_code=404,
             detail="Production not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Fetch {db_code} at route fetch_one on productions")
     return {"data": db_code}
 
 
@@ -164,13 +191,21 @@ def update_production_by_code(code_id: int, production: Production):
     :parameter code_id:
     :parameter production:
     """
+    counter = fetch_counter_by_tag_route(route="productions", tag="update_by_id")
+    if not counter:
+        insert_counter(route="productions", tag="update_by_id", count=1)
+    else:
+        update_counter_count(route="productions", tag="update_by_id")
+
     db_production = fetch_production_by_code(code=code_id)
     if not db_production:
+        insert_log("HTTPException 404 Production not found at route update_by_id on productions")
         raise HTTPException(
             status_code=404,
             detail="Production not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Updated {db_production} to {production} at route update_by_id on productions")
     return update_production(
         code=code_id,
         new_code=production.code,
@@ -201,14 +236,22 @@ def update_partial_production_by_code(code_id: int, production: ProductionOption
     :parameter code_id:
     :parameter production:
     """
+    counter = fetch_counter_by_tag_route(route="productions", tag="partial_update_by_id")
+    if not counter:
+        insert_counter(route="productions", tag="partial_update_by_id", count=1)
+    else:
+        update_counter_count(route="productions", tag="partial_update_by_id")
+
     db_production = fetch_production_by_code(code=code_id)
     stored_model = ProductionOptional(**production.model_dump())
     if not db_production:
+        insert_log("HTTPException 404 Culture not found at route partial_update_by_id on productions")
         raise HTTPException(
             status_code=404,
             detail="Production not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Updated {db_production} to {stored_model} at route partial_update_by_id on productions")
     return partial_update_production(
         code=code_id,
         new_code=stored_model.code,
@@ -237,9 +280,11 @@ def delete_production_by_code(code: int):
     """
     db_production = fetch_production_by_code(code=code)
     if not db_production:
+        insert_log("HTTPException 404 Production not found at route delete_production on productions")
         raise HTTPException(
             status_code=404,
             detail="Production not found",
             headers={"X-Error": "Resource not found"},
         )
+    insert_log(f"Deleted {db_production} at route delete_production on productions")
     return delete_production(code=code)
