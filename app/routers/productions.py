@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from demeter.app.persistence.production_repository import (
+from app.persistence.production_repository import (
     fetch_all_production,
     fetch_production_by_code,
     insert_production,
@@ -58,7 +58,27 @@ def read_productions():
     - **unit**: each unit have a designation
     - **name**: each name have a designation
     """
-    return {"data": fetch_all_production()}
+    db_productions = fetch_all_production()
+    if not db_productions:
+        raise HTTPException(
+            status_code=404,
+            detail="Productions not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    formatted_productions = []
+    for production in db_productions:
+        formatted_productions.append(
+            {
+                "code": production[0],
+                "unit": production[1],
+                "name": production[2],
+            }
+        )
+    return {
+        "status": status.HTTP_200_OK,
+        "data": formatted_productions,
+        "message": "Productions found",
+    }
 
 
 @router.post(
@@ -139,7 +159,15 @@ def read_production(code: int):
             detail="Production not found",
             headers={"X-Error": "Resource not found"},
         )
-    return {"data": db_code}
+    return {
+        "status": status.HTTP_200_OK,
+        "data": {
+            "code": db_code[0],
+            "unit": db_code[1],
+            "name": db_code[2],
+        },
+        "message": "Production found",
+    }
 
 
 @router.put(
