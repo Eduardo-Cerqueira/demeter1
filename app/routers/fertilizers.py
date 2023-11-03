@@ -29,18 +29,18 @@ class FertilizerPatch(BaseModel):
     name: Optional[str] = None
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
-def read_fertilizers():
+@router.get("/", status_code=status.HTTP_200_OK, summary="Get all fertilizers")
+def read_fertilizers(skip: int = 0, limit: int = 10):
     """
     Get all fertilizer's resources.
 
     :return dict: A dict of for the query response.
     """
-    fertilizers = get_fertilizers()
+    fertilizers = get_fertilizers()[skip : skip + limit]
     return {"status": status.HTTP_200_OK, "data": fertilizers}
 
 
-@router.get("/{identifier}", status_code=status.HTTP_200_OK)
+@router.get("/{identifier}", status_code=status.HTTP_200_OK, summary="Get fertilizer by his id")
 def read_fertilizer_by_id(identifier):
     """
     Get a fertilizer resource by its identifier.
@@ -57,7 +57,7 @@ def read_fertilizer_by_id(identifier):
     return {"status": status.HTTP_200_OK, "data": fertilizer}
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one fertilizer")
 def create_fertilizers(fertilizer: Fertilizer):
     """
     Create a new fertilizer.
@@ -71,7 +71,7 @@ def create_fertilizers(fertilizer: Fertilizer):
     return {"status": status.HTTP_201_CREATED, "message": "Fertilizer created"}
 
 
-@router.put("/{identifier}", status_code=status.HTTP_204_NO_CONTENT)
+@router.put("/{identifier}", status_code=status.HTTP_204_NO_CONTENT, summary="Update a fertilizer by his id")
 def update_fertilizer_by_id(identifier, fertilizer: Fertilizer):
     """
     Update a fertilizer by his identifier.
@@ -91,7 +91,7 @@ def update_fertilizer_by_id(identifier, fertilizer: Fertilizer):
     return {"message": "Fertilizer updated"}
 
 
-@router.delete("/{identifier}")
+@router.delete("/{identifier}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a fertilizer by his id")
 def delete_fertilizer_by_id(identifier):
     """
     Delete a fertilizer by his identifier.
@@ -106,7 +106,7 @@ def delete_fertilizer_by_id(identifier):
     return {"message": f"Fertilizer {identifier} successfully deleted"}
 
 
-@router.patch("/{identifier}")
+@router.patch("/{identifier}", status_code=status.HTTP_204_NO_CONTENT, summary="Update partially a fertilizer")
 def partial_update_fertilizer_by_id(identifier, fertilizer: FertilizerPatch):
     """
     Partial update a fertilizer by its identifier.
