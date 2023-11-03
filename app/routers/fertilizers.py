@@ -62,10 +62,7 @@ def create_fertilizers(fertilizer: Fertilizer):
     """
     Create a new fertilizer.
 
-    :param name: The new fertilizer's name
     :param fertilizer: The new fertilizer's data.
-    :param fertilizer.unit: The fertilizer unit.
-    :param fertilizer.name: The fertilizer's name.
     :return dict: A dict of the query response.
     """
     existing_fertilizer = get_fertilizer_by_name(fertilizer.name)
