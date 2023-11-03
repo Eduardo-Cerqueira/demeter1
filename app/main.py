@@ -10,7 +10,6 @@ app.include_router(plots.router)
 app.include_router(spreads.router)
 app.include_router(cultures.router)
 
-
 @app.get("/")
 def read_root():
     return {"message": "Hello World"}

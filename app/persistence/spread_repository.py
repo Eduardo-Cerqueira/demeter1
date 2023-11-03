@@ -65,6 +65,26 @@ def get_spread_by_fertilizer(fertilizer_id):
     finally:
         conn.close()
 
+def get_spreads_order_by_quantity(sort_type):
+    """
+    Get all the spread in the database.
+    :param str sort_type: "asc" or "desc" for the order by.
+    :return: A list of all spread or None if no data.
+    """
+    conn = connect_db()
+    cur = conn.cursor()
+    try:
+        if sort_type.lower() == "asc":
+            cur.execute("SELECT * FROM spread ORDER BY spread_quantity ASC")
+        else:
+            cur.execute("SELECT * FROM spread ORDER BY spread_quantity DESC")
+        return cur.fetchall()
+    except Exception:
+        return None
+    finally:
+        conn.close()
+
+
 
 def create_spread(fertilizer_id, plot_number, date, spread_quantity):
     """

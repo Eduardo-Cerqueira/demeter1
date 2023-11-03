@@ -11,7 +11,9 @@ from app.persistence.plot_repository import (
     create_plot,
 )
 
-router = APIRouter()
+router = APIRouter(
+    tags=["plots"]
+)
 
 
 class Plot(BaseModel):
@@ -36,13 +38,15 @@ class PlotPatch(BaseModel):
 
 
 @router.get("/plots", status_code=status.HTTP_200_OK)
-def read_plots():
+def read_plots(skip: int = 0, limit: int = 10):
     """
     Get all plot's resources.
 
+    :param skip: The number of row to skip.
+    :parma limit: The number of row to display.
     :return dict: A dict of for the query response.
     """
-    resources = get_plots()
+    resources = get_plots()[skip : skip + limit]
     return {"status": status.HTTP_200_OK, "data": resources, "message": "Plots found"}
 
 

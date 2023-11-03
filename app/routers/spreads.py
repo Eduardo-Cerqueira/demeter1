@@ -9,21 +9,23 @@ from app.persistence.spread_repository import (
     partial_update_spread,
     delete_spread,
     create_spread,
+    get_spreads_order_by_quantity
 )
 
-router = APIRouter()
+router = APIRouter(tags=["spread"])
 
 
 class Spread(BaseModel):
     """
     Spread class for route validation.
     """
+    fertilizer_id: str
     plot_number: int
     date: str
     spread_quantity: int
 
 
-class SpreadPatch(BaseModel):
+class SpreadOptional(BaseModel):
     """
     Spread class for partial spread update route validation.
     """
@@ -32,13 +34,21 @@ class SpreadPatch(BaseModel):
 
 
 @router.get("/spreads", status_code=status.HTTP_200_OK)
-def read_spreads():
+def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = "ASC"):
     """
     Get all spread resources.
 
+    :param skip: The number of row to skip.
+    :parma limit: The number of row to display.
+    :sort_quantity str: The type of sort to use, ASC or DESC
+
     :return dict: A dict of the query response.
     """
-    resources = get_spreads()
+    if sort_quantity:
+        resources = get_spreads_order_by_quantity(sort_quantity)[skip : skip + limit]
+    else:
+        resources = get_spreads()[skip : skip + limit]
+
     if not resources:
         raise HTTPException(status_code=404, detail="Spreads not found")
     resources_list = []
@@ -119,7 +129,7 @@ def update_spread_by_fertilizer(fertilizer_id: str, spread: Spread):
 
 @router.patch("/spreads/{fertilizer_id}")
 def partial_update_spread_by_fertilizer(
-    fertilizer_id: str, spread: SpreadPatch
+    fertilizer_id: str, spread: SpreadOptional
 ):
     """
     Partial update a spread by fertilizer.
