@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from demeter.app.persistence.production_repository import (
+from app.persistence.production_repository import (
     fetch_all_production,
     fetch_production_by_code,
     insert_production,
