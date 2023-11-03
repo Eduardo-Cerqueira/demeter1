@@ -24,7 +24,6 @@ class Own(BaseModel):
     value: int
 
 
-
 class OwnPatch(BaseModel):
     """
     Own class for partial own update route validation
