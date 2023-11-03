@@ -42,7 +42,22 @@ class ProductionOptional(BaseModel):
     name: Optional[str] = None
 
 
-@router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all productions")
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch all productions",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "data": [[100, "foo", "FooBar"], [200, "bar", "BarFoo"]]
+                    }
+                }
+            }
+        },
+    },
+)
 def read_productions():
     """
     Fetch all productions with all the information:
@@ -54,7 +69,26 @@ def read_productions():
     return {"data": fetch_all_production()}
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one production")
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    summary="Create one production",
+    responses={
+        201: {
+            "description": "Created",
+        },
+        400: {
+            "content": {
+                "application/json": {"example": {"detail": "Production is empty"}}
+            },
+        },
+        409: {
+            "content": {
+                "application/json": {"example": {"detail": "Production already exists"}}
+            },
+        },
+    },
+)
 def create_production(production: Production):
     """
     Create a production with all the information:
@@ -81,7 +115,21 @@ def create_production(production: Production):
     )
 
 
-@router.get("/{code}", status_code=status.HTTP_200_OK, summary="Fetch one production")
+@router.get(
+    "/{code}",
+    status_code=status.HTTP_200_OK,
+    summary="Fetch one production",
+    responses={
+        200: {
+            "content": {"application/json": {"example": {"data": [100, "foo", "Bar"]}}},
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Production not found"}}
+            },
+        },
+    },
+)
 def read_production(code: int):
     """
     Fetch one production with all the information:
@@ -106,6 +154,16 @@ def read_production(code: int):
     "/{code_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update a production",
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Production not found"}}
+            },
+        },
+    },
 )
 def update_production_by_code(code_id: int, production: UpdateProduction):
     """
@@ -133,6 +191,16 @@ def update_production_by_code(code_id: int, production: UpdateProduction):
     "/{code_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update partially a production",
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Production not found"}}
+            },
+        },
+    },
 )
 def update_partial_production_by_code(code_id: int, production: ProductionOptional):
     """
@@ -158,7 +226,16 @@ def update_partial_production_by_code(code_id: int, production: ProductionOption
 
 
 @router.delete(
-    "/{code}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a production"
+    "/{code}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete a production",
+    responses={
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Production not found"}}
+            },
+        },
+    },
 )
 def delete_production_by_code(code: int):
     """
