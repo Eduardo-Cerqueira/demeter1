@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from demeter.app.persistence.unit_repository import (
+from app.persistence.unit_repository import (
     fetch_all_unit,
     fetch_unit_by_unit,
     insert_unit,
@@ -46,7 +46,25 @@ def read_units():
 
     - **unit**: each unit have a designation
     """
-    return {"data": fetch_all_unit()}
+    db_units = fetch_all_unit()
+    if not db_units:
+        raise HTTPException(
+            status_code=404,
+            detail="Units not found",
+            headers={"X-Error": "Resource not found"},
+        )
+    formatted_units = []
+    for unit in db_units:
+        formatted_units.append(
+            {
+                "unit": unit[0],
+            }
+        )
+    return {
+        "status": status.HTTP_200_OK,
+        "data": formatted_units,
+        "message": "Units found",
+    }
 
 
 @router.post(
@@ -115,7 +133,13 @@ def read_unit(unit: str):
             detail="Unit not found",
             headers={"X-Error": "Resource not found"},
         )
-    return {"data": db_unit}
+    return {
+        "status": status.HTTP_200_OK,
+        "data": {
+            "unit": db_unit[0],
+        },
+        "message": "Unit found",
+    }
 
 
 @router.put(
