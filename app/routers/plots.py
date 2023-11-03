@@ -11,9 +11,7 @@ from app.persistence.plot_repository import (
     create_plot,
 )
 
-router = APIRouter(
-    tags=["plots"]
-)
+router = APIRouter(tags=["plots"])
 
 
 class Plot(BaseModel):
@@ -37,7 +35,36 @@ class PlotPatch(BaseModel):
     location: Optional[str] = None
 
 
-@router.get("/plots", status_code=status.HTTP_200_OK)
+@router.get(
+    "/plots",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": 200,
+                        "data": [
+                            {
+                                "number": 3,
+                                "surface": 100,
+                                "name": "Test",
+                                "location": "Location",
+                            },
+                            {
+                                "number": 2,
+                                "surface": 100,
+                                "name": "Test",
+                                "location": "Location",
+                            },
+                        ],
+                        "message": "Plots found",
+                    }
+                }
+            }
+        }
+    },
+)
 def read_plots(skip: int = 0, limit: int = 10):
     """
     Get all plot's resources.
@@ -50,7 +77,28 @@ def read_plots(skip: int = 0, limit: int = 10):
     return {"status": status.HTTP_200_OK, "data": resources, "message": "Plots found"}
 
 
-@router.get("/plots/{number}")
+@router.get(
+    "/plots/{number}",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": 200,
+                        "data": {
+                            "number": 3,
+                            "surface": 100,
+                            "name": "Test",
+                            "location": "Location",
+                        },
+                        "message": "Plot found",
+                    }
+                }
+            }
+        }
+    },
+)
 def read_plot_by_id(number: int):
     """
     Get a plot resource by its number.
@@ -64,7 +112,20 @@ def read_plot_by_id(number: int):
     return {"status": status.HTTP_200_OK, "data": resource, "message": "Plot found"}
 
 
-@router.post("/plots")
+@router.post(
+    "/plots",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {
+            "description": "Created",
+        },
+        409: {
+            "content": {
+                "application/json": {"example": {"detail": "Plot already exists"}}
+            },
+        },
+    },
+)
 def create_new_plot(plot: Plot):
     """
     Create a new plot.
@@ -86,7 +147,18 @@ def create_new_plot(plot: Plot):
     return {"status": status.HTTP_201_CREATED, "message": "Plot successfully created"}
 
 
-@router.put("/plots/{plot_id}")
+@router.put(
+    "/plots/{plot_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {"application/json": {"example": {"detail": "Plot not found"}}},
+        },
+    },
+)
 def update_plot_by_id(plot_id: int, plot: Plot):
     """
     Update a plot by its number.
@@ -107,7 +179,18 @@ def update_plot_by_id(plot_id: int, plot: Plot):
     return {"message": f"Plot {plot_id} successfully updated "}
 
 
-@router.patch("/plots/{plot_id}")
+@router.patch(
+    "/plots/{plot_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {"application/json": {"example": {"detail": "Plot not found"}}},
+        },
+    },
+)
 def partial_update_plot_by_id(plot_id: int, plot: PlotPatch):
     """
     Parial update a plot by its number.
@@ -128,7 +211,17 @@ def partial_update_plot_by_id(plot_id: int, plot: PlotPatch):
     return {"message": f"Plot {plot_id} successfully updated "}
 
 
-@router.delete("/plots/{plot_id}")
+@router.delete(
+    "/plots/{plot_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Plot not found"}}
+            },
+        },
+    },
+)
 def delete_plot_by_id(plot_id: int):
     """
     Delete a plot by its number.

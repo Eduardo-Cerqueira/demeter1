@@ -9,7 +9,7 @@ from app.persistence.spread_repository import (
     partial_update_spread,
     delete_spread,
     create_spread,
-    get_spreads_order_by_quantity
+    get_spreads_order_by_quantity,
 )
 
 router = APIRouter(tags=["spread"])
@@ -19,6 +19,7 @@ class Spread(BaseModel):
     """
     Spread class for route validation.
     """
+
     fertilizer_id: str
     plot_number: int
     date: str
@@ -29,12 +30,42 @@ class SpreadOptional(BaseModel):
     """
     Spread class for partial spread update route validation.
     """
+
     date: Optional[str] = None
     spread_quantity: Optional[int] = None
 
 
-@router.get("/spreads", status_code=status.HTTP_200_OK)
-def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = "ASC"):
+@router.get(
+    "/spreads",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": 200,
+                        "data": [
+                            {
+                                "fertilizer_id": "c3244185-8318-41a7-9e10-84eaa772ab4b",
+                                "plot_number": 2,
+                                "date": "2023-12-02",
+                                "spread_quantity": 10,
+                            },
+                            {
+                                "fertilizer_id": "7e7f2f30-528d-48bb-8e51-a6aa719bc494",
+                                "plot_number": 3,
+                                "date": "2023-11-02",
+                                "spread_quantity": 1000248,
+                            },
+                        ],
+                        "message": "Spreads found",
+                    }
+                }
+            }
+        }
+    },
+)
+def read_spreads(skip: int = 0, limit: int = 10, sort_quantity="ASC"):
     """
     Get all spread resources.
 
@@ -60,10 +91,35 @@ def read_spreads(skip: int = 0, limit: int = 10, sort_quantity = "ASC"):
             "spread_quantity": spread[3],
         }
         resources_list.append(spread_dict)
-    return {"status": status.HTTP_200_OK, "data": resources_list, "message": "Spreads found"}
+    return {
+        "status": status.HTTP_200_OK,
+        "data": resources_list,
+        "message": "Spreads found",
+    }
 
 
-@router.get("/spreads/{fertilizer_id}")
+@router.get(
+    "/spreads/{fertilizer_id}",
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": 200,
+                        "data": {
+                            "fertilizer_id": "c3244185-8318-41a7-9e10-84eaa772ab4b",
+                            "plot_number": 2,
+                            "date": "2023-12-02",
+                            "spread_quantity": 10,
+                        },
+                        "message": "Spread found",
+                    }
+                }
+            }
+        }
+    },
+)
 def read_spread_by_fertilizer(fertilizer_id: str):
     """
     Get a spread resource by fertilizer.
@@ -81,10 +137,27 @@ def read_spread_by_fertilizer(fertilizer_id: str):
         "spread_quantity": resource[3],
     }
 
-    return {"status": status.HTTP_200_OK, "data": resource_dict, "message": "Spread found"}
+    return {
+        "status": status.HTTP_200_OK,
+        "data": resource_dict,
+        "message": "Spread found",
+    }
 
 
-@router.post("/spreads")
+@router.post(
+    "/spreads",
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        201: {
+            "description": "Created",
+        },
+        409: {
+            "content": {
+                "application/json": {"example": {"detail": "Spread already exists"}}
+            },
+        },
+    },
+)
 def create_new_spread(spread: Spread):
     """
     Create a new spread.
@@ -95,7 +168,7 @@ def create_new_spread(spread: Spread):
     resource = get_spread_by_fertilizer(spread.fertilizer_id)
 
     if resource:
-        raise HTTPException(status_code=409,detail="Spread already exists")
+        raise HTTPException(status_code=409, detail="Spread already exists")
 
     create_spread(
         fertilizer_id=spread.fertilizer_id,
@@ -106,7 +179,20 @@ def create_new_spread(spread: Spread):
     return {"status": status.HTTP_201_CREATED, "message": "Spread successfully created"}
 
 
-@router.put("/spreads/{fertilizer_id}")
+@router.put(
+    "/spreads/{fertilizer_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Spread not found"}}
+            },
+        },
+    },
+)
 def update_spread_by_fertilizer(fertilizer_id: str, spread: Spread):
     """
     Update a spread by fertilizer.
@@ -127,10 +213,21 @@ def update_spread_by_fertilizer(fertilizer_id: str, spread: Spread):
     return {"message": "Spread successfully updated"}
 
 
-@router.patch("/spreads/{fertilizer_id}")
-def partial_update_spread_by_fertilizer(
-    fertilizer_id: str, spread: SpreadOptional
-):
+@router.patch(
+    "/spreads/{fertilizer_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        204: {
+            "description": "No Content",
+        },
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Spread not found"}}
+            },
+        },
+    },
+)
+def partial_update_spread_by_fertilizer(fertilizer_id: str, spread: SpreadOptional):
     """
     Partial update a spread by fertilizer.
 
@@ -150,7 +247,17 @@ def partial_update_spread_by_fertilizer(
     return {"message": "Spread successfully updated"}
 
 
-@router.delete("/spreads/{fertilizer_id}")
+@router.delete(
+    "/spreads/{fertilizer_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        404: {
+            "content": {
+                "application/json": {"example": {"detail": "Spread not found"}}
+            },
+        },
+    },
+)
 def delete_spread_by_fertilizer(fertilizer_id: str):
     """
     Delete a spread by fertilizer.
