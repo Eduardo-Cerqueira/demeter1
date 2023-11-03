@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS public.production
 
 CREATE TABLE IF NOT EXISTS public.culture
 (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid (),
     plot_number smallint NOT NULL,
     production_code smallint NOT NULL,
     start_date date NOT NULL,
