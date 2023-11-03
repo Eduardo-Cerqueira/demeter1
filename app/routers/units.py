@@ -31,13 +31,13 @@ class UnitOptional(BaseModel):
 
 
 @router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all units")
-def read_units():
+def read_units(page: int = 0, limit: int = 10):
     """
     Fetch all units with all the information:
 
     - **unit**: each unit have a designation
     """
-    return {"data": fetch_all_unit()}
+    return {"data": fetch_all_unit()[page : page + limit]}
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one unit")

@@ -43,7 +43,7 @@ class ProductionOptional(BaseModel):
 
 
 @router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all productions")
-def read_productions():
+def read_productions(page: int = 0, limit: int = 10):
     """
     Fetch all productions with all the information:
 
@@ -51,7 +51,7 @@ def read_productions():
     - **unit**: each unit have a designation
     - **name**: each name have a designation
     """
-    return {"data": fetch_all_production()}
+    return {"data": fetch_all_production()[page : page + limit]}
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one production")

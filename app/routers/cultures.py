@@ -52,7 +52,7 @@ class CultureOptional(BaseModel):
 
 
 @router.get("/", status_code=status.HTTP_200_OK, summary="Fetch all cultures")
-def read_cultures():
+def read_cultures(page: int = 0, limit: int = 10):
     """
     Fetch all cultures with all the information:
 
@@ -63,11 +63,11 @@ def read_cultures():
     - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
-    return {"data": fetch_all_culture()}
+    return {"data": fetch_all_culture()[page : page + limit]}
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, summary="Create one culture")
-def create_culture(culture: Culture):
+def create_culture(culture: CreateUpdateCulture):
     """
     Create a culture with all the information:
 
@@ -77,19 +77,6 @@ def create_culture(culture: Culture):
     - **end_date**: each end_date have a date
     - **quantity**: each quantity have integer value
     """
-    if not culture.id:
-        raise HTTPException(
-            status_code=400,
-            detail="Culture is empty",
-            headers={"X-Error": "Resource empty"},
-        )
-    db_culture = fetch_culture_by_id(culture_id=culture.id)
-    if db_culture is not None:
-        raise HTTPException(
-            status_code=409,
-            detail="Culture already exists",
-            headers={"X-Error": "Resource already exists"},
-        )
     return insert_culture(
         plot_number=culture.plot_number,
         production_code=culture.production_code,
@@ -189,7 +176,7 @@ def update_partial_culture_by_id(culture_id: UUID, culture: CultureOptional):
 @router.delete(
     "/{culture_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete a culture"
 )
-def delete_culture_by_id(culture_id: int):
+def delete_culture_by_id(culture_id: UUID):
     """
     Delete a culture using his id value
 
