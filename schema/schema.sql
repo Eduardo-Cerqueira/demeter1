@@ -75,6 +75,22 @@ CREATE TABLE IF NOT EXISTS public.culture
     CONSTRAINT culture_id_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE
+  public.counter (
+    id serial NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
+    route character varying(255) NOT NULL,
+    tag character varying(255) NOT NULL,
+    count bigint NOT NULL DEFAULT 0
+  );
+
+CREATE TABLE
+  public.log (
+    id serial NOT NULL,
+    created_at timestamp without time zone NOT NULL DEFAULT now(),
+    log character varying(255) NOT NULL
+  );
+
 ALTER TABLE IF EXISTS public.spread
     ADD CONSTRAINT plot_number_fk FOREIGN KEY (plot_number)
     REFERENCES public.plot ("number") MATCH SIMPLE
@@ -153,5 +169,15 @@ ALTER TABLE IF EXISTS public.culture
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+ALTER TABLE
+  public.counter
+ADD
+  CONSTRAINT logs_pkey PRIMARY KEY (id)
+
+ALTER TABLE
+  public.log
+ADD
+  CONSTRAINT logs_pkey1 PRIMARY KEY (id)
 
 END;
