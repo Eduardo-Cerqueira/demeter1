@@ -11,19 +11,20 @@ from app.persistence.spread_repository import (
     create_spread,
 )
 
-router = APIRouter()
+router = APIRouter(tags=["spread"])
 
 
 class Spread(BaseModel):
     """
     Spread class for route validation.
     """
+    fertilizer_id: str
     plot_number: int
     date: str
     spread_quantity: int
 
 
-class SpreadPatch(BaseModel):
+class SpreadOptional(BaseModel):
     """
     Spread class for partial spread update route validation.
     """
@@ -32,13 +33,13 @@ class SpreadPatch(BaseModel):
 
 
 @router.get("/spreads", status_code=status.HTTP_200_OK)
-def read_spreads():
+def read_spreads(skip: int = 0, limit: int = 10):
     """
     Get all spread resources.
 
     :return dict: A dict of the query response.
     """
-    resources = get_spreads()
+    resources = get_spreads()[skip : skip + limit]
     if not resources:
         raise HTTPException(status_code=404, detail="Spreads not found")
     resources_list = []
@@ -119,7 +120,7 @@ def update_spread_by_fertilizer(fertilizer_id: str, spread: Spread):
 
 @router.patch("/spreads/{fertilizer_id}")
 def partial_update_spread_by_fertilizer(
-    fertilizer_id: str, spread: SpreadPatch
+    fertilizer_id: str, spread: SpreadOptional
 ):
     """
     Partial update a spread by fertilizer.
