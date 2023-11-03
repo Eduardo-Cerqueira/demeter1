@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 
-from app.persistence.unit_repository import (
+from demeter.app.persistence.unit_repository import (
     fetch_all_unit,
     fetch_unit_by_unit,
     insert_unit,

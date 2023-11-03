@@ -27,7 +27,7 @@ def connect_db():
     return conn
 
 
-def get_plots():
+def get_owns():
     """
     Get all the owns in the database.
 
@@ -80,7 +80,7 @@ def create_own(fertilizer_id, element_code, value):
 
     :param (uuid) fertilizer_id: The own fertilizer_id.
     :param (string) element_code: The own element_code.
-    :param (string) value: The own value.
+    :param (int) value: The own value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
     if existing_own is not None:
@@ -102,7 +102,7 @@ def update_own(fertilizer_id, element_code, value):
 
     :param (uuid) fertilizer_id: The new own fertilizer_id.
     :param (string) element_code: The new own element_code.
-    :param (string) value: The own new value.
+    :param (int) value: The own new value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
     if existing_own is None:
@@ -120,11 +120,11 @@ def update_own(fertilizer_id, element_code, value):
 
 def partial_update_own(fertilizer_id, element_code, value):
     """
-    Partial update plot information by its number.
+    Partial update own information by its number.
 
     :param (uuid) fertilizer_id: The new own fertilizer_id.
     :param (string) element_code: The new own element_code.
-    :param (string) value: The own new value.
+    :param (int) value: The own new value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
     if existing_own is not None:
