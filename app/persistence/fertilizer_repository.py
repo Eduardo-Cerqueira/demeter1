@@ -87,8 +87,8 @@ def partial_update_fertilizer(identifier, unit, name):
     :param (string) unit: The new unit of the fertilizer.
     :param (string) name: The new name of the fertilizer.
     """
-    existing_fertlizer = get_fertilizer_by_id(identifier)
-    if existing_fertlizer is None:
+    existing_fertilizer = get_fertilizer_by_id(identifier)
+    if existing_fertilizer is None:
         raise Exception(f"Plot with number {identifier} not found")
     db.execute(
         "UPDATE fertilizer SET  unit = COALESCE(%s,unit), name = COALESCE(%s,unit) WHERE id = COALESCE(%s,id)",
