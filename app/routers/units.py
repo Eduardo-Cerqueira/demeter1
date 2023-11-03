@@ -94,6 +94,9 @@ def create_unit(unit: Unit):
     status_code=status.HTTP_200_OK,
     summary="Fetch one unit",
     responses={
+        200: {
+            "content": {"application/json": {"example": {"data": ["foo"]}}},
+        },
         404: {
             "content": {"application/json": {"example": {"detail": "Unit not found"}}},
         },
@@ -120,6 +123,9 @@ def read_unit(unit: str):
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update a unit",
     responses={
+        204: {
+            "description": "No Content",
+        },
         404: {
             "content": {"application/json": {"example": {"detail": "Unit not found"}}},
         },
@@ -147,6 +153,9 @@ def update_unit_by_unit(unit_name: str, unit: Unit):
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Update partially a unit",
     responses={
+        204: {
+            "description": "No Content",
+        },
         404: {
             "content": {"application/json": {"example": {"detail": "Unit not found"}}},
         },
