@@ -42,6 +42,8 @@ def read_plots(skip: int = 0, limit: int = 10):
     """
     Get all plot's resources.
 
+    :param skip: The number of row to skip.
+    :parma limit: The number of row to display.
     :return dict: A dict of for the query response.
     """
     resources = get_plots()[skip : skip + limit]
