@@ -37,19 +37,9 @@ def get_spreads():
     cur = conn.cursor()
     try:
         cur.execute("SELECT * FROM spread")
-        spreads_data = cur.fetchall()
-        spreads_list = []
-        for spread in spreads_data:
-            spread_dict = {
-                "fertilizer_id": spread[0],
-                "plot_number": spread[1],
-                "date": spread[2],
-                "spread_quantity": float(spread[3]),
-            }
-            spreads_list.append(spread_dict)
-            return spreads_list
-    except Exception as error:
-        return error
+        return cur.fetchall()
+    except Exception:
+        return None
     finally:
         conn.close()
 
@@ -60,25 +50,18 @@ def get_spread_by_fertilizer(fertilizer_id):
     Get a spread by fertilizer_id.
 
     :param (str) fertilizer_id: The ID of the fertilizer.
-    :return: A list of dict with the spread's data, None or Error if not found.
+    :return: A Tuple with the spread's data or None if not found.
     """
     conn = connect_db()
     cur = conn.cursor()
     try:
-
         cur.execute(
             "SELECT * FROM spread WHERE fertilizer_id = %s",
             (fertilizer_id,),
         )
-        spread_dict = {
-            "fertilizer_id": spread[0],
-            "plot_number": spread[1],
-            "date": spread[2],
-            "spread_quantity": float(spread[3]),
-        }
-        return spread_dict
-    except Exception as error:
-        return error
+        return cur.fetchone()
+    except Exception:
+        return None
     finally:
         conn.close()
 
@@ -121,8 +104,8 @@ def update_spread(fertilizer_id, plot_number, new_date, new_spread_quantity):
     cur = conn.cursor()
     try:
         cur.execute(
-            "UPDATE spread SET spread_quantity = %s WHERE fertilizer_id = %s AND plot_number = %s AND date = %s",
-            (new_spread_quantity, fertilizer_id, plot_number, new_date),
+            "UPDATE spread SET spread_quantity = %s, date = %s WHERE fertilizer_id = %s",
+            (new_spread_quantity, new_date, fertilizer_id),
         )
     except Exception as error:
         return error
@@ -146,8 +129,8 @@ def partial_update_spread(fertilizer_id, plot_number, new_date, new_spread_quant
     try:
         cur.execute(
             "UPDATE public.spread SET date = COALESCE(%s, date), spread_quantity = COALESCE(%s, spread_quantity) WHERE "
-            "fertilizer_id = %s AND plot_number = %s",
-            (new_date, new_spread_quantity, fertilizer_id, plot_number),
+            "fertilizer_id = %s",
+            (new_date, new_spread_quantity, fertilizer_id,),
         )
     except Exception as error:
         return error

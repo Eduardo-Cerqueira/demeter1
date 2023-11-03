@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import units, productions, plots
+from app.routers import units, productions, plots, spreads
 
 app = FastAPI(title="Demeter", version="0.1.0")
 
@@ -7,6 +7,7 @@ app = FastAPI(title="Demeter", version="0.1.0")
 app.include_router(units.router)
 app.include_router(productions.router)
 app.include_router(plots.router)
+app.include_router(spreads.router)
 
 
 @app.get("/")
