@@ -128,7 +128,7 @@ def partial_update_spread(fertilizer_id, plot_number, new_date, new_spread_quant
     cur = conn.cursor()
     try:
         cur.execute(
-            "UPDATE public.spread SET date = COALESCE(%s, date), spread_quantity = COALESCE(%s, spread_quantity) WHERE "
+            "UPDATE spread SET date = COALESCE(%s, date), spread_quantity = COALESCE(%s, spread_quantity) WHERE "
             "fertilizer_id = %s",
             (new_date, new_spread_quantity, fertilizer_id,),
         )
@@ -149,7 +149,7 @@ def delete_spread(fertilizer_id):
     conn = connect_db()
     cur = conn.cursor()
     try:
-        cur.execute("DELETE FROM public.spread WHERE fertilizer_id = %s", (fertilizer_id,))
+        cur.execute("DELETE FROM spread WHERE fertilizer_id = %s", (fertilizer_id,))
     except Exception as error:
         return error
     finally:
