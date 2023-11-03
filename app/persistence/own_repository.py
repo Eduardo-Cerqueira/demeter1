@@ -54,7 +54,7 @@ def get_own_by_fertilizer_id(fertilizer_id):
     """
     Get a plot by its fertilizer id.
 
-    :param (int) fertilizer_id: The own fertilizer_id.
+    :param (uuid) fertilizer_id: The own fertilizer_id.
     :return: A dict with the owns data or None if not found.
     """
     conn = connect_db()
@@ -78,8 +78,8 @@ def create_own(fertilizer_id, element_code, value):
     """
     Create a new own in the database.
 
-    :param (int) fertilizer_id: The own fertilizer_id.
-    :param (int) element_code: The own element_code.
+    :param (uuid) fertilizer_id: The own fertilizer_id.
+    :param (string) element_code: The own element_code.
     :param (string) value: The own value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
@@ -100,8 +100,8 @@ def update_own(fertilizer_id, element_code, value):
     """
     Update own information by its number.
 
-    :param (int) fertilizer_id: The new own fertilizer_id.
-    :param (int) element_code: The new own element_code.
+    :param (uuid) fertilizer_id: The new own fertilizer_id.
+    :param (string) element_code: The new own element_code.
     :param (string) value: The own new value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
@@ -122,8 +122,8 @@ def partial_update_own(fertilizer_id, element_code, value):
     """
     Partial update plot information by its number.
 
-    :param (int) fertilizer_id: The new own fertilizer_id.
-    :param (int) element_code: The new own element_code.
+    :param (uuid) fertilizer_id: The new own fertilizer_id.
+    :param (string) element_code: The new own element_code.
     :param (string) value: The own new value.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
@@ -144,7 +144,7 @@ def delete_own(fertilizer_id):
     """
     Delete own by its fertilizer_id.
 
-    :param (int) fertilizer_id: The own fertilizer_id to delete.
+    :param (uuid) fertilizer_id: The own fertilizer_id to delete.
     """
     existing_own = get_own_by_fertilizer_id(fertilizer_id)
     if existing_own is not None:
