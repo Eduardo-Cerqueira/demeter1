@@ -217,7 +217,7 @@ def partial_update_plot_by_id(plot_id: int, plot: PlotPatch):
     responses={
         404: {
             "content": {
-                "application/json": {"example": {"detail": "Spread not found"}}
+                "application/json": {"example": {"detail": "Plot not found"}}
             },
         },
     },
